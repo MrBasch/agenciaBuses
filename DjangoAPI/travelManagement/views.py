@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
 from . import serializers
-from .services import delete_city, get_all_cities, get_city_with_code, get_or_create_city, upload_or_create_city
+from .services import get_all_stations, create_city, delete_city, get_all_cities, get_city_with_code, get_or_create_city, get_or_create_station, upload_or_create_city
 
 # Create your views here.
 
@@ -54,4 +54,27 @@ class CityAPI(APIView):
         if(created):
             data["message"] = "the city was added succesfully"
             return Response(data=data, status=status.HTTP_201_CREATED)
+
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+class StationAPI(APIView):
+    def get(self, request):
+        station = get_all_stations()
+        serializer = serializers.StationSerializer(station, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        name = request.data.get("name")
+        code = request.data.get("code")
+        city = request.data.get("city")
+        station, created = get_or_create_station(
+            name=name, code=code, city=city)
+        serializer = serializers.StationSerializer(station)
+        print("station serializer = ", serializer)
+        data = {"data": serializer.data, "message": "was added succesfully"}
+        if(not created):
+            data["message"] = "failed to add, the station already exist"
+            print("stations = ", Station.objects.all())
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)

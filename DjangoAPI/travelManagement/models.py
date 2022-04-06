@@ -7,7 +7,7 @@ from .constants import BUS_CHOICES, DRIVER_CHOICES, ROUTE_CHOICES
 
 class City(models.Model):
     name = models.CharField(max_length=50)
-    code = models.CharField(max_length=50)
+    code = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return f"{self.name} - {self.code}"
@@ -15,6 +15,7 @@ class City(models.Model):
 
 class Station(models.Model):
     name = models.CharField(max_length=50)
+    code = models.CharField(max_length=50, unique=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -22,16 +23,17 @@ class Station(models.Model):
 
 
 class Route(models.Model):
+    code = models.CharField(max_length=50, unique=True)
     stops = models.ManyToManyField(Station)
     name = models.CharField(max_length=100)
     status = models.CharField(max_length=50, choices=ROUTE_CHOICES)
 
     def __str__(self):
-        return (f"{self.name} - {self.stops} - {self.status}",)
+        return (f"{self.name} - {self.code} - {self.stops} - {self.status}",)
 
 
 class Bus(models.Model):
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10, unique=True)
     status = models.CharField(max_length=50, choices=BUS_CHOICES)
 
     def __str__(self):
@@ -40,7 +42,7 @@ class Bus(models.Model):
 
 class Driver(models.Model):
     name = models.CharField(max_length=50)
-    rut = models.CharField(max_length=12, blank=False)
+    rut = models.CharField(max_length=12, blank=False, unique=True)
     status = models.CharField(max_length=50, choices=DRIVER_CHOICES)
 
     def __str__(self):
@@ -48,6 +50,7 @@ class Driver(models.Model):
 
 
 class Travel(models.Model):
+    code = models.CharField(max_length=50, unique=True)
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
@@ -60,7 +63,7 @@ class Travel(models.Model):
 
 class Place(models.Model):
     travel_id = models.ForeignKey(Travel, on_delete=models.CASCADE)
-    code = models.CharField(max_length=50, blank=False)
+    code = models.CharField(max_length=50, blank=False, unique=True)
     available = models.BooleanField(default=True)
 
     def __str__(self):
@@ -70,7 +73,7 @@ class Place(models.Model):
 class Passenger(models.Model):
     place_id = models.ForeignKey(Place, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    rut = models.CharField(max_length=12, blank=False)
+    rut = models.CharField(max_length=12, blank=False, unique=True)
 
     def __str__(self):
         return f"{self.place_id} - {self.name} - {self.rut}"

@@ -37,7 +37,7 @@ class TestCities:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_post__happy_path(self, api_client):
+    def test_post__city_no_exist(self, api_client):
         city = {"name": "Viña del mar", "code": "VDM"}
 
         response = api_client.post(self.url, city, format="json",)
@@ -54,6 +54,7 @@ class TestCities:
         response = api_client.delete(self.url, param, format="json",)
         expected_value = {"message": "Delete Succesfully"}
         assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_200_OK
 
     def test_delete_city_no_exist(self, api_client):
         param = {"code": "SCL"}
@@ -61,6 +62,7 @@ class TestCities:
         response = api_client.delete(self.url, param, format="json",)
         expected_value = {"message": "NO MATCH CODE CITY"}
         assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_put__city_exist(self, api_client):
         city = baker.make("travelManagement.City", name="Santiago", code="SCL")
