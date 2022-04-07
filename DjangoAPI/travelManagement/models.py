@@ -29,7 +29,11 @@ class Route(models.Model):
     status = models.CharField(max_length=50, choices=ROUTE_CHOICES)
 
     def __str__(self):
-        return (f"{self.name} - {self.code} - {self.stops} - {self.status}",)
+        return f"{self.name} - {self.code} - {self.stops.all()} - {self.status}"
+
+    def get_stops_name(self):
+        stops = list(self.stops.all().values_list("name", flat=True))
+        return " - ".join(name for name in stops)
 
 
 class Bus(models.Model):

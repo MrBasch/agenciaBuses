@@ -1,4 +1,5 @@
 from dataclasses import fields
+from unittest.util import _MAX_LENGTH
 
 from rest_framework import serializers
 
@@ -25,3 +26,10 @@ class StationSerializer(serializers.Serializer):
 
     def get_city(self, instance):
         return CitySerializer(instance.city).data
+
+
+class RouteSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=50)
+    stops = StationSerializer(many=True)
+    name = serializers.CharField(max_length=100)
+    status = serializers.CharField(max_length=50)
