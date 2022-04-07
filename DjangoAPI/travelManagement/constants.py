@@ -6,7 +6,6 @@ DRIVER_CHOICES = (
     ("ON_THE_WAY", "ON_THE_WAY"),
     ("UNAVAILABLE", "UNAVAILABLE"),
 )
-
 ROUTE_CHOICES = (
     (
         "AVAILABLE",
@@ -15,7 +14,6 @@ ROUTE_CHOICES = (
     ("UNAVAILABLE", "UNAVAILABLE"),
     ("CLOSED", "CLOSED"),
 )
-
 BUS_CHOICES = (
     (
         "AVAILABLE",

@@ -1,3 +1,4 @@
+from email.policy import default
 import json
 from isort import code
 import pytest
@@ -50,16 +51,60 @@ class TestStation:
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 
-    # def test_post_station_not_exist(self, api_client):
-    #     santiago = baker.make("travelManagement.City",
-    #                           name="Santiago", code="SCL")
-    #     expected = {"data": {"name": "San Borja", "city": {"name": "Santiago",
-    #                                                        "code": "SCL"}}, "message": "was added succesfully"}
-    #     param = {"name": "San Borja", "code": "SNB",
-    #              "city": {"id": }}
+    def test_post_station_not_exist(self, api_client):
+        santiago = baker.make("travelManagement.City",
+                              name="Santiago", code="SCL")
+        expected = {"data": {"name": "San Borja", "city": {"name": "Santiago",
+                                                           "code": "SCL"}}, "message": "was added succesfully"}
+        param = {"name": "San Borja", "code": "SNB",
+                 "city": 1}
 
-    #     response = api_client.post(self.url, param, format="json",)
-    #     print("response = ", response.content)
-    #     print("expected = ", expected)
-        # assert json.loads(response.content) == expected
-        # assert response.status_code == status.HTTP_200_OK
+        response = api_client.post(self.url, param, format="json",)
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_delete_station_exist(self, api_client):
+        santiago = baker.make("travelManagement.City",
+                              name="Santiago", code="SCL")
+        terminal_santiago = baker.make(
+            "travelManagement.Station", name="San Borja", code="SNB", city=santiago)
+        param = {"code": "SNB"}
+        expected_value = {"message": "Delete Succesfully"}
+
+        response = api_client.delete(self.url, param, format="json",)
+        assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_delete_station_no_exist(self, api_client):
+        param = {"code": "SNB"}
+        expected_value = {"message": "NO MATCH CODE CITY"}
+
+        response = api_client.delete(self.url, param, format="json",)
+        assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_put__city_exist(self, api_client):
+        santiago = baker.make("travelManagement.City",
+                              name="Santiago", code="SCL")
+        terminal_santiago = baker.make(
+            "travelManagement.Station", name="San Borja", code="SNB", city=santiago)
+        param = {"code": "SNB", "name": "Shile",
+                 "new_code": "SHI", "city_id": 1}
+
+        response = api_client.put(self.url, param, format="json")
+        expected_value = {'data': {'name': 'Shile', 'city': {
+            'name': 'Santiago', 'code': 'SCL'}}, 'message': 'Update Succesfully'}
+        assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_put__city_not_exist(self, api_client):
+        santiago = baker.make("travelManagement.City",
+                              name="Santiago", code="SCL")
+        param = {"code": "SNB", "name": "Shile",
+                 "new_code": "SHI", "city_id": 1}
+
+        response = api_client.put(self.url, param, format="json")
+        expected_value = {'data': {'name': 'Shile', 'city': {
+            'name': 'Santiago', 'code': 'SCL'}}, 'message': 'the station was added succesfully'}
+        assert json.loads(response.content) == expected_value
+        assert response.status_code == status.HTTP_201_CREATED
