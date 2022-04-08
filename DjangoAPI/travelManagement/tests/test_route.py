@@ -43,8 +43,6 @@ class TestRoute:
             name="Chillan - Santiago",
             status="AVAILABLE",
         )
-        stops = [terminal_santiago, terminal_santiago2, terminal_chillan2]
-        print("stops =", stops)
 
     def test_get(self, api_client):
         self.create_data()
@@ -77,35 +75,123 @@ class TestRoute:
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 
-    # def test_post_route_exist(self, api_client):
-    #     self.create_data()
-    #     expected = [
-    #         {
-    #             "code": "XR1",
-    #             "stops": [
-    #                 {"name": "San Borja", "city": {"name": "Santiago", "code": "SCL"}},
-    #                 {"name": "Santiago", "city": {"name": "Santiago", "code": "SCL"}},
-    #                 {"name": "Maria Juana", "city": {"name": "Chillan", "code": "CHN"}},
-    #             ],
-    #             "name": "Santiago Chillan",
-    #             "status": "AVAILABLE",
-    #         }
-    #     ]
-    #     param = {
-    #         "code": "XR1",
-    #         "stops": [1, 2, 4],
-    #         "name": "Santiago Chillan",
-    #         "status": "AVAILABLE",
-    #     }
+    def test_post_route_exist(self, api_client):
+        self.create_data()
+        expected = {
+            "code": "XR1",
+            "stops": [
+                {"name": "San Borja", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Santiago", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Maria Juana", "city": {"name": "Chillan", "code": "CHN"}},
+            ],
+            "name": "Santiago - Chillan",
+            "status": "AVAILABLE",
+        }
+        param = {
+            "code": "XR1",
+            "stops": [1, 2, 4],
+            "name": "Santiago Chillan",
+            "status": "AVAILABLE",
+        }
 
-    #     response = api_client.post(
-    #         self.url,
-    #         param,
-    #         format="json",
-    #     )
-    #     print("response = ", response.content)
-    # assert json.loads(response.content) == expected
-    # assert response.status_code == status.HTTP_200_OK
+        response = api_client.post(
+            self.url,
+            param,
+            format="json",
+        )
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_post_route_not_exist(self, api_client):
+        santiago = baker.make("travelManagement.City", name="Santiago", code="SCL")
+        baker.make("travelManagement.City", name="Chillan", code="CHN")
+        valparaiso = baker.make("travelManagement.City", name="Valparaiso", code="VAL")
+        terminal_santiago = baker.make(
+            "travelManagement.Station", name="San Borja", city=santiago
+        )
+        terminal_santiago2 = baker.make(
+            "travelManagement.Station", name="Santiago", city=santiago
+        )
+        baker.make("travelManagement.Station", name="Terminal Valpo", city=valparaiso)
+        param = {
+            "code": "PRUEBAPOSTX",
+            "stops": [terminal_santiago.id, terminal_santiago2.id],
+            "name": "Santiago con los k",
+            "status": "AVAILABLE",
+        }
+        expected = {
+            "code": "PRUEBAPOSTX",
+            "stops": [
+                {"name": "San Borja", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Santiago", "city": {"name": "Santiago", "code": "SCL"}},
+            ],
+            "name": "Santiago con los k",
+            "status": "AVAILABLE",
+        }
+
+        response = api_client.post(
+            self.url,
+            param,
+            format="json",
+        )
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_put_route_exist(self, api_client):
+        self.create_data()
+        expected = {
+            "code": "XR1",
+            "stops": [
+                {"name": "San Borja", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Santiago", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Maria Juana", "city": {"name": "Chillan", "code": "CHN"}},
+            ],
+            "name": "Santiago - Chillan",
+            "status": "AVAILABLE",
+        }
+        param = {
+            "code": "XR1",
+            "stops": [1, 2, 3, 4],
+            "name": "Santiago Chillan",
+            "status": "AVAILABLE",
+        }
+
+        response = api_client.post(
+            self.url,
+            param,
+            format="json",
+        )
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_put_route_exist(self, api_client):
+        self.create_data()
+        expected = {
+            "code": "XRR",
+            "stops": [
+                {"name": "San Borja", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Santiago", "city": {"name": "Santiago", "code": "SCL"}},
+                {"name": "Maria Teresa", "city": {"name": "Chillan", "code": "CHN"}},
+                {"name": "Maria Juana", "city": {"name": "Chillan", "code": "CHN"}},
+            ],
+            "name": "Santiago Peumo",
+            "status": "AVAILABLE",
+        }
+        param = {
+            "code": "XRR",
+            "stops": [1, 2, 3, 4],
+            "name": "Santiago Peumo",
+            "status": "AVAILABLE",
+        }
+
+        response = api_client.post(
+            self.url,
+            param,
+            format="json",
+        )
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_201_CREATED
+
     def test_delete_route_exist(self, api_client):
         self.create_data()
         param = {"code": "XR1"}

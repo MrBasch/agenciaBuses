@@ -56,7 +56,6 @@ class TestDriver:
             "data": {"name": "Wates", "rut": "15.123.015-5", "status": "AVAILABLE"},
             "message": "was added succesfully",
         }
-        print("response post driver", response.content)
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_201_CREATED
 

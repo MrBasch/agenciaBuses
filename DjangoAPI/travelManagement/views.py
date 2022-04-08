@@ -25,6 +25,7 @@ from .services import (
     upload_or_create_station,
     get_all_routes,
     get_or_create_route,
+    update_or_create_route,
     get_route_by_code,
     delete_route,
     get_all_buses,
@@ -141,21 +142,18 @@ class RouteAPI(APIView):
         serializer = serializers.RouteSerializer(route, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    # def post(self, request):
-    #     name = request.data.get("name")
-    #     code = request.data.get("code")
-    #     print("request post route", request.data)
-    #     station_list = request.data.get("stops")
-    #     print("station_list = ", station_list)
-    #     print("station_list[0] = ", station_list[0])
-    #     print("station_list[0] = ", type(station_list[0]))
-    #     print("type = ", type(station_list))
-    #     status = request.data.get("status")
-    #     route, created = get_or_create_route(
-    #         name=name, code=code, station_list=station_list, status=status
-    #     )
-    #     print("route", route)
-    #     print("created", created)
+    def post(self, request):
+        name = request.data.get("name")
+        code = request.data.get("code")
+        station_list = request.data.get("stops")
+        state = request.data.get("status")
+        route, created = get_or_create_route(
+            name=name, code=code, station_list=station_list, status=state
+        )
+        serializer = serializers.RouteSerializer(route)
+        if created:
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request):
         code = request.data.get("code")
@@ -167,6 +165,26 @@ class RouteAPI(APIView):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         delete_route(route=route)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        name = request.data.get("name")
+        code = request.data.get("code")
+        new_code = request.data.get("new_code")
+        station_list = request.data.get("stops")
+        state = request.data.get("status")
+        route, created = update_or_create_route(
+            name=name,
+            code=code,
+            station_list=station_list,
+            status=state,
+            new_code=new_code,
+        )
+        serializer = serializers.RouteSerializer(route)
+        data = {"data": serializer.data, "message": "Update Succesfully"}
+        if created:
+            data["message"] = "the route was added succesfully"
+            return Response(data=data, status=status.HTTP_201_CREATED)
         return Response(data=data, status=status.HTTP_200_OK)
 
 
