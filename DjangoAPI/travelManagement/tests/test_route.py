@@ -1,5 +1,4 @@
 import json
-from email.policy import default
 
 import pytest
 from django.urls import reverse

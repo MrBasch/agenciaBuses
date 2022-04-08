@@ -27,6 +27,16 @@ from .services import (
     get_or_create_route,
     get_route_by_code,
     delete_route,
+    get_all_buses,
+    get_or_create_bus,
+    upload_or_create_bus,
+    get_bus_with_code,
+    delete_bus,
+    get_all_drivers,
+    get_or_create_driver,
+    upload_or_create_driver,
+    get_driver_with_rut,
+    delete_driver,
 )
 
 # Create your views here.
@@ -157,4 +167,92 @@ class RouteAPI(APIView):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         delete_route(route=route)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class BusAPI(APIView):
+    def get(self, request):
+        buses = get_all_buses()
+        serializer = serializers.BusSerializer(buses, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        state = request.data.get("status")
+        code = request.data.get("code")
+        bus, created = get_or_create_bus(status=state, code=code)
+        serializer = serializers.BusSerializer(bus)
+        data = {"data": serializer.data, "message": "was added succesfully"}
+        if not created:
+            data["message"] = "failed to add, the bus already exist"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def put(self, request):
+        code = request.data.get("code")
+        state = request.data.get("status")
+        new_code = request.data.get("new_code")
+        bus, created = upload_or_create_bus(status=state, code=code, new_code=new_code)
+        serializer = serializers.BusSerializer(bus)
+        data = {"data": serializer.data, "message": "Update Succesfully"}
+        if created:
+            data["message"] = "the bus was added succesfully"
+            return Response(data=data, status=status.HTTP_201_CREATED)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        code = request.data.get("code")
+        data = {"message": "Delete Succesfully"}
+
+        try:
+            bus = get_bus_with_code(code=code)
+        except ObjectDoesNotExist:
+            data["message"] = "NO MATCH BUS CODE"
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        delete_bus(bus=bus)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class DriverAPI(APIView):
+    def get(self, request):
+        drivers = get_all_drivers()
+        serializer = serializers.DriverSerializer(drivers, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        state = request.data.get("status")
+        rut = request.data.get("rut")
+        name = request.data.get("name")
+        driver, created = get_or_create_driver(status=state, name=name, rut=rut)
+        serializer = serializers.DriverSerializer(driver)
+        data = {"data": serializer.data, "message": "was added succesfully"}
+        if not created:
+            data["message"] = "failed to add, the driver already exist"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def put(self, request):
+        state = request.data.get("status")
+        rut = request.data.get("rut")
+        name = request.data.get("name")
+        new_rut = request.data.get("new_rut")
+        bus, created = upload_or_create_driver(
+            status=state, rut=rut, new_rut=new_rut, name=name
+        )
+        serializer = serializers.DriverSerializer(bus)
+        data = {"data": serializer.data, "message": "Update Succesfully"}
+        if created:
+            data["message"] = "the driver was added succesfully"
+            return Response(data=data, status=status.HTTP_201_CREATED)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        rut = request.data.get("rut")
+        data = {"message": "Delete Succesfully"}
+
+        try:
+            driver = get_driver_with_rut(rut=rut)
+        except ObjectDoesNotExist:
+            data["message"] = "NO MATCH DRIVER RUT"
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        delete_driver(driver=driver)
         return Response(data=data, status=status.HTTP_200_OK)

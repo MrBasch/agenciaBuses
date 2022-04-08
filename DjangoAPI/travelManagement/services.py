@@ -1,4 +1,4 @@
-from .models import City, Route, Station
+from .models import Bus, City, Route, Station, Driver
 from .constants import DRIVER_CHOICES, ROUTE_CHOICES, BUS_CHOICES
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -105,3 +105,55 @@ def get_or_create_route(name, code, station_list, status):
 #     paradas= Station.objects.filter(id__in=station_list)
 #     Route.objects.create(name=name, code=code, status=status, stops=paradas)
 # ------------------------------ ROUTES ---------------------------------
+
+# ------------------------------ Bus ---------------------------------
+
+
+def get_all_buses():
+    return Bus.objects.all()
+
+
+def get_or_create_bus(code, status):
+    return Bus.objects.get_or_create(code=code, status=status)
+
+
+def upload_or_create_bus(code, status, new_code):
+    return Bus.objects.update_or_create(
+        code=code, defaults={"status": status, "code": new_code}
+    )
+
+
+def get_bus_with_code(code):
+    return Bus.objects.get(code=code)
+
+
+def delete_bus(bus):
+    bus.delete()
+
+
+# ------------------------------ Bus ---------------------------------
+
+# ------------------------------ Driver ---------------------------------
+def get_all_drivers():
+    return Driver.objects.all()
+
+
+def get_or_create_driver(name, status, rut):
+    return Driver.objects.get_or_create(name=name, status=status, rut=rut)
+
+
+def upload_or_create_driver(name, status, rut, new_rut):
+    return Driver.objects.update_or_create(
+        rut=rut, defaults={"status": status, "rut": new_rut, "name": name}
+    )
+
+
+def get_driver_with_rut(rut):
+    return Driver.objects.get(rut=rut)
+
+
+def delete_driver(driver):
+    driver.delete()
+
+
+# ------------------------------ Driver ---------------------------------

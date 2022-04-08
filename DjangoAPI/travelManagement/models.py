@@ -58,8 +58,8 @@ class Travel(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    start_time = models.DateField()
-    end_time = models.DateField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
     def __str__(self):
         return f"{self.route} - {self.bus} - {self.driver} - {self.start_time}"

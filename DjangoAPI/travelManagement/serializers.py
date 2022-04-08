@@ -33,3 +33,23 @@ class RouteSerializer(serializers.Serializer):
     stops = StationSerializer(many=True)
     name = serializers.CharField(max_length=100)
     status = serializers.CharField(max_length=50)
+
+
+class BusSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=10)
+    status = serializers.CharField(max_length=50)
+
+
+class DriverSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=50)
+    rut = serializers.CharField(max_length=12)
+    status = serializers.CharField(max_length=50)
+
+
+class TravelSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=50)
+    route = RouteSerializer()
+    bus = BusSerializer()
+    driver = DriverSerializer()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
