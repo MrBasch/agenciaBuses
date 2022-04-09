@@ -43,7 +43,7 @@ class TestDriver:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_post__driver_no_exist(self, api_client):
+    def test_post__driver_not_exist(self, api_client):
         self.create_data()
         param = {"name": "Wates", "rut": "15.123.015-5", "status": "AVAILABLE"}
 
@@ -105,7 +105,7 @@ class TestDriver:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_delete_driver_no_exist(self, api_client):
+    def test_delete_driver_not_exist(self, api_client):
         param = {"rut": "18154231-5"}
 
         response = api_client.delete(

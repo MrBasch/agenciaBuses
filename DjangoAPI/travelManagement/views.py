@@ -1,7 +1,3 @@
-from asyncio.windows_events import NULL
-from distutils.command.upload import upload
-from telnetlib import STATUS
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -13,16 +9,17 @@ from rest_framework.views import APIView
 from . import serializers
 from .models import *
 from .services import (
-    get_city_with_code,
+    delete_travel,
+    get_city_by_code,
     delete_city,
     get_all_cities,
     get_or_create_city,
-    upload_or_create_city,
+    update_or_create_city,
     get_all_stations,
     delete_station,
     get_or_create_station,
-    get_station_with_code,
-    upload_or_create_station,
+    get_station_by_code,
+    update_or_create_station,
     get_all_routes,
     get_or_create_route,
     update_or_create_route,
@@ -30,14 +27,19 @@ from .services import (
     delete_route,
     get_all_buses,
     get_or_create_bus,
-    upload_or_create_bus,
-    get_bus_with_code,
+    update_or_create_bus,
+    get_bus_by_code,
     delete_bus,
     get_all_drivers,
     get_or_create_driver,
-    upload_or_create_driver,
-    get_driver_with_rut,
+    update_or_create_driver,
+    get_driver_by_rut,
     delete_driver,
+    get_all_travels,
+    get_or_create_travel,
+    update_or_create_travel,
+    get_travel_by_code,
+    delete_travel,
 )
 
 # Create your views here.
@@ -64,7 +66,7 @@ class CityAPI(APIView):
         code = request.data.get("code")
         data = {"message": "Delete Succesfully"}
         try:
-            city = get_city_with_code(code=code)
+            city = get_city_by_code(code=code)
         except ObjectDoesNotExist:
             data["message"] = "NO MATCH CODE CITY"
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
@@ -75,7 +77,7 @@ class CityAPI(APIView):
         code = request.data.get("code")
         name = request.data.get("name")
         new_code = request.data.get("new_code")
-        city, created = upload_or_create_city(name=name, code=code, new_code=new_code)
+        city, created = update_or_create_city(name=name, code=code, new_code=new_code)
         serializer = serializers.CitySerializer(city)
         data = {"data": serializer.data, "message": "Update Succesfully"}
         if created:
@@ -111,7 +113,7 @@ class StationAPI(APIView):
         data = {"message": "Delete Succesfully"}
 
         try:
-            station = get_station_with_code(code=code)
+            station = get_station_by_code(code=code)
         except ObjectDoesNotExist:
             data["message"] = "NO MATCH CODE CITY"
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
@@ -124,7 +126,7 @@ class StationAPI(APIView):
         name = request.data.get("name")
         new_code = request.data.get("new_code")
         city_id = request.data.get("city_id")
-        station, created = upload_or_create_station(
+        station, created = update_or_create_station(
             name=name, code=code, new_code=new_code, city_id=city_id
         )
         serializer = serializers.StationSerializer(station)
@@ -209,7 +211,7 @@ class BusAPI(APIView):
         code = request.data.get("code")
         state = request.data.get("status")
         new_code = request.data.get("new_code")
-        bus, created = upload_or_create_bus(status=state, code=code, new_code=new_code)
+        bus, created = update_or_create_bus(status=state, code=code, new_code=new_code)
         serializer = serializers.BusSerializer(bus)
         data = {"data": serializer.data, "message": "Update Succesfully"}
         if created:
@@ -222,7 +224,7 @@ class BusAPI(APIView):
         data = {"message": "Delete Succesfully"}
 
         try:
-            bus = get_bus_with_code(code=code)
+            bus = get_bus_by_code(code=code)
         except ObjectDoesNotExist:
             data["message"] = "NO MATCH BUS CODE"
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
@@ -253,7 +255,7 @@ class DriverAPI(APIView):
         rut = request.data.get("rut")
         name = request.data.get("name")
         new_rut = request.data.get("new_rut")
-        bus, created = upload_or_create_driver(
+        bus, created = update_or_create_driver(
             status=state, rut=rut, new_rut=new_rut, name=name
         )
         serializer = serializers.DriverSerializer(bus)
@@ -268,9 +270,74 @@ class DriverAPI(APIView):
         data = {"message": "Delete Succesfully"}
 
         try:
-            driver = get_driver_with_rut(rut=rut)
+            driver = get_driver_by_rut(rut=rut)
         except ObjectDoesNotExist:
             data["message"] = "NO MATCH DRIVER RUT"
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         delete_driver(driver=driver)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class TravelAPI(APIView):
+    def get(self, request):
+        travels = get_all_travels()
+        serializer = serializers.TravelSerializer(travels, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        code = request.data.get("code")
+        code_route = request.data.get("route")
+        start_time = request.data.get("start_time")
+        end_time = request.data.get("end_time")
+        id_driver = request.data.get("driver")
+        code_bus = request.data.get("bus")
+        travel, created = get_or_create_travel(
+            code=code,
+            code_bus=code_bus,
+            id_driver=id_driver,
+            code_route=code_route,
+            start_time=start_time,
+            end_time=end_time,
+        )
+        serializer = serializers.TravelSerializer(travel)
+        data = {"data": serializer.data, "message": "was added succesfully"}
+        if not created:
+            data["message"] = "failed to add, the travel already exist"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def put(self, request):
+        code = request.data.get("code")
+        new_code = request.data.get("new_code")
+        code_route = request.data.get("route")
+        start_time = request.data.get("start_time")
+        end_time = request.data.get("end_time")
+        id_driver = request.data.get("driver")
+        code_bus = request.data.get("bus")
+        travel, created = update_or_create_travel(
+            code=code,
+            new_code=new_code,
+            code_bus=code_bus,
+            id_driver=id_driver,
+            code_route=code_route,
+            start_time=start_time,
+            end_time=end_time,
+        )
+        serializer = serializers.TravelSerializer(travel)
+        data = {"data": serializer.data, "message": "the travel was update succesfully"}
+        if not created:
+            data["message"] = "the travel was added succesfully"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        code = request.data.get("code")
+        data = {"message": "Delete Succesfully"}
+        try:
+            travel = get_travel_by_code(code=code)
+        except ObjectDoesNotExist:
+            data["message"] = "NO MATCH CODE TRAVEL"
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        delete_travel(travel=travel)
         return Response(data=data, status=status.HTTP_200_OK)

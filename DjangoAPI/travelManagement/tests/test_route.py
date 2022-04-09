@@ -205,7 +205,7 @@ class TestRoute:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_delete_route_no_exist(self, api_client):
+    def test_delete_route_not_exist(self, api_client):
         param = {"code": "JM#"}
         expected_value = {"message": "NO MATCH CODE ROUTE"}
 

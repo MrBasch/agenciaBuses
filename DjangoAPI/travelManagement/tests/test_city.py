@@ -42,7 +42,7 @@ class TestCities:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_post__city_no_exist(self, api_client):
+    def test_post__city_not_exist(self, api_client):
         city = {"name": "Viña del mar", "code": "VDM"}
 
         response = api_client.post(
@@ -68,7 +68,7 @@ class TestCities:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_delete_city_no_exist(self, api_client):
+    def test_delete_city_not_exist(self, api_client):
         param = {"code": "SCL"}
 
         response = api_client.delete(

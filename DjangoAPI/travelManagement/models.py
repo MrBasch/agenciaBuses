@@ -1,5 +1,6 @@
+from email.policy import default
 from django.db import models
-
+from datetime import datetime
 from .constants import BUS_CHOICES, DRIVER_CHOICES, ROUTE_CHOICES
 
 # Create your models here.
@@ -58,8 +59,8 @@ class Travel(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField(blank=True, default=datetime.now)
+    end_time = models.DateTimeField(blank=True, default=datetime.now)
 
     def __str__(self):
         return f"{self.route} - {self.bus} - {self.driver} - {self.start_time}"

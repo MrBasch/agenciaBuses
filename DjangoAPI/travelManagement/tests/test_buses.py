@@ -94,7 +94,7 @@ class TestCities:
         assert json.loads(response.content) == expected_value
         assert response.status_code == status.HTTP_200_OK
 
-    def test_delete_bus_no_exist(self, api_client):
+    def test_delete_bus_not_exist(self, api_client):
         self.create_data()
         param = {"code": "QQQ"}
         response = api_client.delete(
