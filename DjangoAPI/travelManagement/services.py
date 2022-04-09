@@ -1,7 +1,7 @@
 from xml.dom import ValidationErr
 
 from django.forms import ValidationError
-from .models import Bus, City, Route, Station, Driver, Travel
+from .models import Bus, City, Place, Route, Station, Driver, Travel
 from .constants import DRIVER_STATUSES, DRIVER_STATUSES, BUS_STATUSES, ROUTE_STATUSES
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -63,6 +63,10 @@ def delete_station(station):
     station.delete()
 
 
+def create_station(station):
+    station.save()
+
+
 def get_stations_by_list_code(station_list):
     return list(Station.objects.filter(id__in=station_list))
 
@@ -110,6 +114,10 @@ def update_or_create_route(name, code, station_list, status, new_code):
     return route, created
 
 
+def create_route(route):
+    route.save()
+
+
 # ------------------------------ ROUTES ---------------------------------
 
 # ------------------------------ Bus ---------------------------------
@@ -135,6 +143,10 @@ def get_bus_by_code(code):
 
 def delete_bus(bus):
     bus.delete()
+
+
+def create_bus(bus):
+    bus.save()
 
 
 # ------------------------------ Bus ---------------------------------
@@ -166,6 +178,10 @@ def delete_driver(driver):
     driver.delete()
 
 
+def create_driver(driver):
+    driver.save()
+
+
 # ------------------------------ Driver ---------------------------------
 
 
@@ -179,7 +195,6 @@ def get_or_create_travel(code, code_route, id_driver, code_bus, start_time, end_
     # raise ValidationError
     # stations = get_stations_by_list_code(station_list)
     # if not stations:
-    print("start time")
 
     driver = get_driver_by_id(id_driver)
     bus = get_bus_by_code(code_bus)
@@ -195,7 +210,7 @@ def get_or_create_travel(code, code_route, id_driver, code_bus, start_time, end_
         },
     )
     if created:
-        route.save()
+        travel.save()
     return travel, created
 
 
@@ -223,7 +238,7 @@ def update_or_create_travel(
         },
     )
     if created:
-        route.save()
+        travel.save()
     return travel, created
 
 
@@ -235,4 +250,51 @@ def delete_travel(travel):
     travel.delete()
 
 
+def create_travel(travel):
+    travel.save()
+
+
 # ------------------------------ Travel ---------------------------------
+
+
+# ------------------------------ Place ---------------------------------
+def get_all_places():
+    return Place.objects.all()
+
+
+def get_place_by_code(code):
+    return Place.objects.get(code=code)
+
+
+def delete_place(place):
+    place.delete()
+
+
+def create_place(place):
+    place.save()
+
+
+def get_or_create_place(code, available, code_travel):
+    travel = get_travel_by_code(code_travel)
+    print("code_travel =", code_travel)
+    print("travel =", travel)
+    place, created = Place.objects.get_or_create(
+        code=code, defaults={"travel": travel, "available": available}
+    )
+    if created:
+        place.save()
+    return place, created
+
+
+def update_or_create_place(code, available, code_travel, new_code):
+    travel = get_travel_by_code(code_travel)
+    place, created = Place.objects.get_or_create(
+        code=code,
+        defaults={"travel": travel, "available": available, "new_code": new_code},
+    )
+    if created:
+        place.save()
+    return place, created
+
+
+# ------------------------------ Place ---------------------------------

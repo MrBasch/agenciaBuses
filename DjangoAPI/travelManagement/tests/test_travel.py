@@ -229,7 +229,7 @@ class TestTravel:
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_post_travel_exist(self, api_client):
+    def test_put_travel_exist(self, api_client):
         param = {
             "code": "TSFF",
             "new_code": "KLZ",
@@ -271,10 +271,58 @@ class TestTravel:
                 "start_time": "2022-02-05T18:30:00Z",
                 "end_time": "2022-02-05T23:30:00Z",
             },
-            "message": "the travel was added succesfully",
+            "message": "the travel was update succesfully",
         }
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
+
+    def test_put_travel_no_exist(self, api_client):
+        param = {
+            "code": "AAAA",
+            "new_code": "KLZ",
+            "route": "XR1",
+            "start_time": "2022-02-04T23:30:00Z",
+            "end_time": "2022-02-06T23:30:00Z",
+            "driver": self.juan_driver.id,
+            "bus": "JVV",
+        }
+        response = api_client.put(
+            self.url,
+            param,
+            format="json",
+        )
+        expected = {
+            "data": {
+                "code": "KLZ",
+                "route": {
+                    "code": "XR1",
+                    "stops": [
+                        {
+                            "name": "San Borja",
+                            "city": {"name": "Santiago", "code": "SCL"},
+                        },
+                        {
+                            "name": "Santiago",
+                            "city": {"name": "Santiago", "code": "SCL"},
+                        },
+                        {
+                            "name": "Maria Juana",
+                            "city": {"name": "Chillan", "code": "CHN"},
+                        },
+                    ],
+                    "name": "Santiago - Chillan",
+                    "status": "AVAILABLE",
+                },
+                "bus": {"code": "JVV", "status": "AVAILABLE"},
+                "driver": {"name": "Juan", "rut": "18132231-6", "status": "AVAILABLE"},
+                "start_time": "2022-02-04T23:30:00Z",
+                "end_time": "2022-02-06T23:30:00Z",
+            },
+            "message": "the travel was added succesfully",
+        }
+        print("response travel no exist", response.content)
+        assert json.loads(response.content) == expected
+        assert response.status_code == status.HTTP_201_CREATED
 
     def test_delete_travel_exist(self, api_client):
         param = {

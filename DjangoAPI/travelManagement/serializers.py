@@ -53,3 +53,9 @@ class TravelSerializer(serializers.Serializer):
     driver = DriverSerializer()
     start_time = serializers.DateTimeField()
     end_time = serializers.DateTimeField()
+
+
+class PlaceSerializer(serializers.Serializer):
+    travel = TravelSerializer()
+    code = serializers.CharField(max_length=50)
+    available = serializers.BooleanField()

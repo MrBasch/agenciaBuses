@@ -67,12 +67,12 @@ class Travel(models.Model):
 
 
 class Place(models.Model):
-    travel_id = models.ForeignKey(Travel, on_delete=models.CASCADE)
+    travel = models.ForeignKey(Travel, on_delete=models.CASCADE)
     code = models.CharField(max_length=50, blank=False, unique=True)
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.travel_id} - {self.code} - {self.available}"
+        return f"{self.travel} - {self.code} - {self.available}"
 
 
 class Passenger(models.Model):
