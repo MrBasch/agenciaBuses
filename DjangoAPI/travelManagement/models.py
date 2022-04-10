@@ -76,9 +76,9 @@ class Place(models.Model):
 
 
 class Passenger(models.Model):
-    place_id = models.ForeignKey(Place, on_delete=models.CASCADE)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     rut = models.CharField(max_length=12, blank=False, unique=True)
 
     def __str__(self):
-        return f"{self.place_id} - {self.name} - {self.rut}"
+        return f"{self.place} - {self.name} - {self.rut}"

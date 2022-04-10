@@ -320,7 +320,6 @@ class TestTravel:
             },
             "message": "the travel was added succesfully",
         }
-        print("response travel no exist", response.content)
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_201_CREATED
 

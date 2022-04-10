@@ -59,3 +59,9 @@ class PlaceSerializer(serializers.Serializer):
     travel = TravelSerializer()
     code = serializers.CharField(max_length=50)
     available = serializers.BooleanField()
+
+
+class PassengerSerializer(serializers.Serializer):
+    place = PlaceSerializer()
+    name = serializers.CharField(max_length=50)
+    rut = serializers.CharField(max_length=12)

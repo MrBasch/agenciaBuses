@@ -95,7 +95,6 @@ class TestPlace:
         param = {"code": "G1V"}
         response = api_client.delete(self.url, param, format="json")
         expected = {"message": "Delete Succesfully"}
-        print("response SSSS= ", response.content)
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 
@@ -237,6 +236,5 @@ class TestPlace:
             "message": "the place was update succesfully",
         }
         response = api_client.put(self.url, param, format="json")
-        print("response = ", response.content)
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK

@@ -377,3 +377,55 @@ class PlaceAPI(APIView):
             data["message"] = "the place was update succesfully"
             return Response(data=data, status=status.HTTP_200_OK)
         return Response(data=data, status=status.HTTP_201_CREATED)
+
+
+class PassengerAPI(APIView):
+    def get(self, request):
+        passengers = services.get_all_passenger()
+        serializer = serializers.PassengerSerializer(passengers, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        place_code = request.data.get("place")
+        name = request.data.get("name")
+        rut = request.data.get("rut")
+        new_rut = request.data.get("new_rut")
+        passenger, created = services.update_or_create_passenger(
+            place_code=place_code,
+            name=name,
+            rut=rut,
+            new_rut=new_rut,
+        )
+        serializer = serializers.PassengerSerializer(passenger)
+        data = {"data": serializer.data, "message": "the place was added succesfully"}
+        if not created:
+            data["message"] = "the place was update succesfully"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def post(self, request):
+        place_code = request.data.get("place")
+        name = request.data.get("name")
+        rut = request.data.get("rut")
+        passenger, created = services.get_or_create_passenger(
+            place_code=place_code,
+            name=name,
+            rut=rut,
+        )
+        serializer = serializers.PassengerSerializer(passenger)
+        data = {"data": serializer.data, "message": "was added succesfully"}
+        if not created:
+            data["message"] = "failed to add, the passenger already exist"
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        id = request.data.get("id")
+        data = {"message": "Delete Succesfully"}
+        try:
+            passenger = services.get_passenger_by_id(id=id)
+        except ObjectDoesNotExist:
+            data["message"] = "NO MATCH ID PASSENGER"
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        services.delete_passanger(passenger=passenger)
+        return Response(data=data, status=status.HTTP_200_OK)
