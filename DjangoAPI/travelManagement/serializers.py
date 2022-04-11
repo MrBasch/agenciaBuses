@@ -3,16 +3,8 @@ from unittest.util import _MAX_LENGTH
 
 from rest_framework import serializers
 
-from travelManagement.models import (
-    Bus,
-    City,
-    Driver,
-    Passenger,
-    Place,
-    Route,
-    Station,
-    Travel,
-)
+from travelManagement.models import (Bus, City, Driver, Passenger, Place,
+                                     Route, Station, Travel)
 
 
 class CitySerializer(serializers.Serializer):

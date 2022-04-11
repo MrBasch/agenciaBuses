@@ -1,11 +1,12 @@
+import datetime
 import json
 import re
+
+import arrow
 import pytest
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
-import arrow
-import datetime
 
 
 @pytest.mark.django_db

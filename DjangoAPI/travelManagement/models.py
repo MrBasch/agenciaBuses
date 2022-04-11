@@ -1,6 +1,8 @@
-from email.policy import default
-from django.db import models
 from datetime import datetime
+from email.policy import default
+
+from django.db import models
+
 from .constants import BUS_CHOICES, DRIVER_CHOICES, ROUTE_CHOICES
 
 # Create your models here.
