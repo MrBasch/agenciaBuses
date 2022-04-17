@@ -5,11 +5,58 @@ from isort import code
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
+from rest_framework import permissions
 
 from . import serializers, services
 from .models import *
 
 # Create your views here.
+# class CreateData(APIView):
+#     services.get_or_create_city(name="Santiago", code="STG")
+#     services.get_or_create_city(name="Achao", code="ACH")
+#     services.get_or_create_city(name="Algarrobo", code="ALG")
+#     services.get_or_create_city(name="Buin", code="BUI")
+#     services.get_or_create_city(name="Chillan", code="YAI")
+#     services.get_or_create_city(name="Coyhaique", code="CXQ")
+
+#     services.get_or_create_station(name="San Borja", code="SNBJA", city_id=1)
+#     services.get_or_create_station(name="Alameda", code="ALMD", city_id=1)
+#     services.get_or_create_station(name="Terminal Sur", code="TSUR", city_id=1)
+#     services.get_or_create_station(name="Terminal Alto Jahuel", code="TAHL", city_id=4)
+#     services.get_or_create_station(name="Estacion Buin", code="EBN", city_id=4)
+#     services.get_or_create_station(name="Terminal del Centro", code="TCEN", city_id=5)
+#     services.get_or_create_station(name="Terminal Maria Teresa", code="TMT", city_id=5)
+#     services.get_or_create_station(name="Terminal Algarrobo", code="TAL", city_id=3)
+#     services.get_or_create_station(
+#         name="Terminal Aguilas Patagonicas", code="TAP", city_id=6
+#     )
+#     services.get_or_create_station(
+#         name="Terminal Municipal Coyhaique", code="TMC", city_id=6
+#     )
+#     #get_or_create_route(name, code, station_list, status)
+#     services.get_or_create_route("Santiago-Chillán", code="STG-YAI", station_list=[1,2,6], status="AVAILABLE")
+#     services.get_or_create_route("Santiago-Buin", code="STG-BUI", station_list=[1,4], status="AVAILABLE")
+#     services.get_or_create_route("Buin-Algarrobo", code="BUI-ALG", station_list=[5,8], status="AVAILABLE")
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+
+    queryset = User.objects.all().order_by("-date_joined")
+    serializer_class = serializers.UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+
+    queryset = Group.objects.all()
+    serializer_class = serializers.GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class CityAPI(APIView):
@@ -27,7 +74,6 @@ class CityAPI(APIView):
         if not created:
             data["message"] = "failed to add, the city already exist"
             return Response(data=data, status=status.HTTP_200_OK)
-        services.create_city(city)
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
@@ -78,7 +124,6 @@ class StationAPI(APIView):
         if not created:
             data["message"] = "failed to add, the station already exist"
             return Response(data=data, status=status.HTTP_200_OK)
-        services.create_station(station=station)
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):

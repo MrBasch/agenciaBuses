@@ -1,5 +1,4 @@
 import json
-
 import pytest
 from django.urls import reverse
 from model_bakery import baker
@@ -21,7 +20,13 @@ class TestCities:
             {"code": "JPK", "status": "AVAILABLE"},
             {"code": "JVV", "status": "AVAILABLE"},
         ]
-        response = api_client.get(self.url, format="json")
+        response = api_client.get(
+            self.url,
+            headers={"Authorization": "Token 766c1cfc137888181d2c6f8b0e14a7dd2dc1f8ea"},
+            format="json",
+        )
+        print(response.content)
+        print("WOOOOloooooo")
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 

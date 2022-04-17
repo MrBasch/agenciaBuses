@@ -1,10 +1,29 @@
 from dataclasses import fields
 from unittest.util import _MAX_LENGTH
-
+from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 from travelManagement.models import (Bus, City, Driver, Passenger, Place,
                                      Route, Station, Travel)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "username", "password"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        user = User(email=validated_data["email"], username=validated_data["username"])
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
+
+
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ["url", "name"]
 
 
 class CitySerializer(serializers.Serializer):

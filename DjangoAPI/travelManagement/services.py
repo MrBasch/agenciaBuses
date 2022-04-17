@@ -5,7 +5,7 @@ from isort import code
 
 from .constants import BUS_STATUSES, DRIVER_STATUSES, ROUTE_STATUSES
 from .models import Bus, City, Driver, Passenger, Place, Route, Station, Travel
-
+from rest_framework.authtoken.models import Token
 
 # promedio de pasajeros por trayecto
 def average_passangers_for_route(route_code):
@@ -42,6 +42,10 @@ def travels_by_station(id_station):
 # ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| CRUD |||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
+def create_token(user):
+    return Token.objects.create(user=user)
+
+
 # ------------------------------CITIES---------------------------------
 
 
@@ -51,8 +55,11 @@ def get_all_cities():
 
 def get_or_create_city(name: str, code: str):
     if not code or not name:
-        raise ValidationError("Invalid data")
-    return City.objects.get_or_create(name=name, code=code)
+        raise ValidationError
+    city, created = City.objects.get_or_create(name=name, code=code)
+    if created:
+        city.save()
+    return city, created
 
 
 def update_or_create_city(code: str, name: str, new_code: str):
@@ -95,8 +102,13 @@ def get_all_stations():
 def get_or_create_station(name, code, city_id):
     city_instance = City.objects.get(id=city_id)
     if not code or not name or not city_instance:
-        raise ValidationError("Invalid data")
-    return Station.objects.get_or_create(name=name, code=code, city=city_instance)
+        raise ValidationError
+    station, created = Station.objects.get_or_create(
+        name=name, code=code, city=city_instance
+    )
+    if created:
+        station.save()
+    return station, created
 
 
 def update_or_create_station(code, name, new_code, city_id):
@@ -201,8 +213,11 @@ def get_all_buses():
 
 def get_or_create_bus(code, status):
     if status not in BUS_STATUSES or not code:
-        raise ValidationError("Invalid data")
-    return Bus.objects.get_or_create(code=code, status=status)
+        raise ValidationError
+    bus, created = Bus.objects.get_or_create(code=code, status=status)
+    if created:
+        bus.save()
+    return bus, created
 
 
 def update_or_create_bus(code, status, new_code):
