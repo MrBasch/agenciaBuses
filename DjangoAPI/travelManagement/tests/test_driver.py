@@ -24,7 +24,10 @@ class TestDriver:
             {"name": "Zeta", "rut": "18154231-5", "status": "AVAILABLE"},
             {"name": "Juan", "rut": "18132231-6", "status": "AVAILABLE"},
         ]
-        response = api_client.get(self.url, format="json")
+        response = api_client.get(
+            self.url,
+            format="json",
+        )
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 

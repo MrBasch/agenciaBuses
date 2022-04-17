@@ -14,4 +14,7 @@ urlpatterns = [
     path("/travel", vista.TravelAPI.as_view(), name="travel_view"),
     path("/place", vista.PlaceAPI.as_view(), name="place_view"),
     path("/passenger", vista.PassengerAPI.as_view(), name="passenger_view"),
+    path("/averiage", vista.AveriagePassenger.as_view(), name="averiage_passenger"),
+    path("/filtered_buses", vista.FilterBuses.as_view(), name="filter_bus"),
+    path("/create_data", vista.CreateData.as_view(), name="data_view"),
 ]

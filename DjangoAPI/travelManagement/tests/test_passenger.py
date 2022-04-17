@@ -4,13 +4,24 @@ import pytest
 from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, Permission
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 class TestPlace:
     url = reverse("passenger_view")
 
     def setup_method(self):
+        self.permissions = Permission.objects.all()
+
+        self.group = baker.make("auth.Group", name="grupo-usuarios")
+        self.group.permissions.add(*self.permissions)
+        self.user = baker.make(get_user_model(), username="test")
+        self.user.set_password("123456A-")
+        self.user.groups.add(self.group)
+        self.user.save()
+
         self.santiago = baker.make("travelManagement.City", name="Santiago", code="SCL")
         self.chillan = baker.make("travelManagement.City", name="Chillan", code="CHN")
         self.terminal_santiago = baker.make(
@@ -100,7 +111,11 @@ class TestPlace:
         )
 
     def test_get(self, api_client):
-        response = api_client.get(self.url, format="json")
+        api_client.force_authenticate(self.user)
+        response = api_client.get(
+            self.url,
+            format="json",
+        )
         expected = [
             {
                 "place": {
@@ -179,6 +194,7 @@ class TestPlace:
                 "rut": "21.243.123-5",
             },
         ]
+        breakpoint()
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 

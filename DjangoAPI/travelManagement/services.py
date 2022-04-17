@@ -2,41 +2,41 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.forms import ValidationError
 from isort import code
-
+from django.db.models import Q
 from .constants import BUS_STATUSES, DRIVER_STATUSES, ROUTE_STATUSES
 from .models import Bus, City, Driver, Passenger, Place, Route, Station, Travel
 from rest_framework.authtoken.models import Token
 
 # promedio de pasajeros por trayecto
 def average_passangers_for_route(route_code):
-    # route = get_route_by_code(code=route_code)
-    # select all travels where route.id=id_route filter
     total_used_places = (
         Place.objects.select_related("travel__route")
-        .get(code=route_code)
-        .filter(available=False)
+        .filter(travel__route__code=route_code, available=False)
         .count()
     )
-    num_of_travels = Travel.objects.get(route__code=route_code).count()
-    print("total", total_used_places)
-    print("number of travels = ", num_of_travels)
-    return total_used_places / num_of_travels
+    num_of_travels = Travel.objects.filter(route__code=route_code).count() * 10
+    try:
+        return total_used_places / num_of_travels
+    except ZeroDivisionError:
+        return 0
 
 
 # Filtrar a todos los buses de un trayecto con más del N % de su capacidad vendida.
 def selling_buses_by_route(route_code: str, N: int):
-    buses = Bus.objects.get(__route__code=route_code).filter(
-        Count(____available=False) >= N
-    )
-    print("buese =", buses)
-
-    # Filtrar viajes por destino
-
-
-def travels_by_station(id_station):
-    travels = Travel.objects.get(route__stops__id=id_station).filter(
-        status="active"
-    )  # añadir status al modelo
+    travels = Travel.objects.filter(
+        route__code=route_code, place__available=False
+    ).annotate(places=Count("place"))
+    buses = []
+    for travel in travels:
+        if travel.places >= int(N):
+            buses.append(
+                {
+                    "bus_code": travel.bus.code,
+                    "bus_status": travel.bus.status,
+                    "places": travel.places,
+                }
+            )
+    return buses
 
 
 # ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| CRUD |||||||||||||||||||||||||||||||||||||||||||||||||||||||||
