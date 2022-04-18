@@ -21,11 +21,14 @@
                 </v-card>
             </li>
         </ul>
+        <create-travel-modal :open="open"/>
     </div>
 </template>
 
 <script>
+import createTravelModal from '@/components/createTravelModal.vue';
 export default {
+  components: { createTravelModal },
     data() {
       return {
         open:false,
