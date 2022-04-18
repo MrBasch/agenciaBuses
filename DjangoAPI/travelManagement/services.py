@@ -213,7 +213,7 @@ def get_all_buses():
 
 def get_or_create_bus(code, status):
     if status not in BUS_STATUSES or not code:
-        raise ValidationError
+        raise ValidationError("Invalid data")
     bus, created = Bus.objects.get_or_create(code=code, status=status)
     if created:
         bus.save()

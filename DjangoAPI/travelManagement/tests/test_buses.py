@@ -25,8 +25,6 @@ class TestCities:
             headers={"Authorization": "Token 766c1cfc137888181d2c6f8b0e14a7dd2dc1f8ea"},
             format="json",
         )
-        print(response.content)
-        print("WOOOOloooooo")
         assert json.loads(response.content) == expected
         assert response.status_code == status.HTTP_200_OK
 

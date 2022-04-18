@@ -249,8 +249,8 @@ class CityAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        name = request.data.get("name")
-        code = request.data.get("code")
+        name = request.GET.get("name")
+        code = request.GET.get("code")
         city, created = services.get_or_create_city(name=name, code=code)
         serializer = serializers.CitySerializer(city)
         data = {"data": serializer.data, "message": "was added succesfully"}
@@ -260,7 +260,7 @@ class CityAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
         try:
             city = services.get_city_by_code(code=code)
@@ -271,9 +271,9 @@ class CityAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        code = request.data.get("code")
-        name = request.data.get("name")
-        new_code = request.data.get("new_code")
+        code = request.GET.get("code")
+        name = request.GET.get("name")
+        new_code = request.GET.get("new_code")
         city, created = services.update_or_create_city(
             name=name, code=code, new_code=new_code
         )
@@ -294,9 +294,9 @@ class StationAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        name = request.data.get("name")
-        code = request.data.get("code")
-        city_id = request.data.get("city")
+        name = request.GET.get("name")
+        code = request.GET.get("code")
+        city_id = request.GET.get("city")
 
         station, created = services.get_or_create_station(
             name=name, code=code, city_id=city_id
@@ -310,7 +310,7 @@ class StationAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
 
         try:
@@ -323,10 +323,10 @@ class StationAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        code = request.data.get("code")
-        name = request.data.get("name")
-        new_code = request.data.get("new_code")
-        city_id = request.data.get("city_id")
+        code = request.GET.get("code")
+        name = request.GET.get("name")
+        new_code = request.GET.get("new_code")
+        city_id = request.GET.get("city_id")
         station, created = services.update_or_create_station(
             name=name, code=code, new_code=new_code, city_id=city_id
         )
@@ -346,10 +346,10 @@ class RouteAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        name = request.data.get("name")
-        code = request.data.get("code")
-        station_list = request.data.get("stops")
-        state = request.data.get("status")
+        name = request.GET.get("name")
+        code = request.GET.get("code")
+        station_list = request.GET.get("stops")
+        state = request.GET.get("status")
         route, created = services.get_or_create_route(
             name=name, code=code, station_list=station_list, status=state
         )
@@ -360,7 +360,7 @@ class RouteAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
         try:
             route = services.get_route_by_code(code=code)
@@ -371,11 +371,11 @@ class RouteAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        name = request.data.get("name")
-        code = request.data.get("code")
-        new_code = request.data.get("new_code")
-        station_list = request.data.get("stops")
-        state = request.data.get("status")
+        name = request.GET.get("name")
+        code = request.GET.get("code")
+        new_code = request.GET.get("new_code")
+        station_list = request.GET.get("stops")
+        state = request.GET.get("status")
         route, created = services.update_or_create_route(
             name=name,
             code=code,
@@ -399,8 +399,8 @@ class BusAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        state = request.data.get("status")
-        code = request.data.get("code")
+        state = request.GET.get("status")
+        code = request.GET.get("code")
         bus, created = services.get_or_create_bus(status=state, code=code)
         serializer = serializers.BusSerializer(bus)
         data = {"data": serializer.data, "message": "was added succesfully"}
@@ -411,9 +411,9 @@ class BusAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def put(self, request):
-        code = request.data.get("code")
-        state = request.data.get("status")
-        new_code = request.data.get("new_code")
+        code = request.GET.get("code")
+        state = request.GET.get("status")
+        new_code = request.GET.get("new_code")
         bus, created = services.update_or_create_bus(
             status=state, code=code, new_code=new_code
         )
@@ -426,9 +426,8 @@ class BusAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
-
         try:
             bus = services.get_bus_by_code(code=code)
         except ObjectDoesNotExist:
@@ -445,9 +444,9 @@ class DriverAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        state = request.data.get("status")
-        rut = request.data.get("rut")
-        name = request.data.get("name")
+        state = request.GET.get("status")
+        rut = request.GET.get("rut")
+        name = request.GET.get("name")
         driver, created = services.get_or_create_driver(
             status=state, name=name, rut=rut
         )
@@ -460,10 +459,10 @@ class DriverAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def put(self, request):
-        state = request.data.get("status")
-        rut = request.data.get("rut")
-        name = request.data.get("name")
-        new_rut = request.data.get("new_rut")
+        state = request.GET.get("status")
+        rut = request.GET.get("rut")
+        name = request.GET.get("name")
+        new_rut = request.GET.get("new_rut")
         driver, created = services.update_or_create_driver(
             status=state, rut=rut, new_rut=new_rut, name=name
         )
@@ -476,7 +475,7 @@ class DriverAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def delete(self, request):
-        rut = request.data.get("rut")
+        rut = request.GET.get("rut")
         data = {"message": "Delete Succesfully"}
 
         try:
@@ -495,12 +494,12 @@ class TravelAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        code = request.data.get("code")
-        code_route = request.data.get("route")
-        start_time = request.data.get("start_time")
-        end_time = request.data.get("end_time")
-        id_driver = request.data.get("driver")
-        code_bus = request.data.get("bus")
+        code = request.GET.get("code")
+        code_route = request.GET.get("route")
+        start_time = request.GET.get("start_time")
+        end_time = request.GET.get("end_time")
+        id_driver = request.GET.get("driver")
+        code_bus = request.GET.get("bus")
         travel, created = services.get_or_create_travel(
             code=code,
             code_bus=code_bus,
@@ -518,13 +517,13 @@ class TravelAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def put(self, request):
-        code = request.data.get("code")
-        new_code = request.data.get("new_code")
-        code_route = request.data.get("route")
-        start_time = request.data.get("start_time")
-        end_time = request.data.get("end_time")
-        id_driver = request.data.get("driver")
-        code_bus = request.data.get("bus")
+        code = request.GET.get("code")
+        new_code = request.GET.get("new_code")
+        code_route = request.GET.get("route")
+        start_time = request.GET.get("start_time")
+        end_time = request.GET.get("end_time")
+        id_driver = request.GET.get("driver")
+        code_bus = request.GET.get("bus")
         travel, created = services.update_or_create_travel(
             code=code,
             new_code=new_code,
@@ -543,7 +542,7 @@ class TravelAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
         try:
             travel = services.get_travel_by_code(code=code)
@@ -561,9 +560,9 @@ class PlaceAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        code = request.data.get("code")
-        available = request.data.get("available")
-        code_travel = request.data.get("travel")
+        code = request.GET.get("code")
+        available = request.GET.get("available")
+        code_travel = request.GET.get("travel")
         place, created = services.get_or_create_place(
             code=code,
             available=available,
@@ -577,7 +576,7 @@ class PlaceAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
-        code = request.data.get("code")
+        code = request.GET.get("code")
         data = {"message": "Delete Succesfully"}
         try:
             place = services.get_place_by_code(code=code)
@@ -588,10 +587,10 @@ class PlaceAPI(APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        code = request.data.get("code")
-        new_code = request.data.get("new_code")
-        available = request.data.get("available")
-        code_travel = request.data.get("travel")
+        code = request.GET.get("code")
+        new_code = request.GET.get("new_code")
+        available = request.GET.get("available")
+        code_travel = request.GET.get("travel")
         place, created = services.update_or_create_place(
             code=code,
             available=available,
@@ -614,10 +613,10 @@ class PassengerAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        place_code = request.data.get("place")
-        name = request.data.get("name")
-        rut = request.data.get("rut")
-        new_rut = request.data.get("new_rut")
+        place_code = request.GET.get("place")
+        name = request.GET.get("name")
+        rut = request.GET.get("rut")
+        new_rut = request.GET.get("new_rut")
         passenger, created = services.update_or_create_passenger(
             place_code=place_code,
             name=name,
@@ -632,9 +631,9 @@ class PassengerAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def post(self, request):
-        place_code = request.data.get("place")
-        name = request.data.get("name")
-        rut = request.data.get("rut")
+        place_code = request.GET.get("place")
+        name = request.GET.get("name")
+        rut = request.GET.get("rut")
 
         passenger, created = services.get_or_create_passenger(
             place_code=place_code,
@@ -650,7 +649,7 @@ class PassengerAPI(APIView):
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
-        id = request.data.get("id")
+        id = request.GET.get("id")
         data = {"message": "Delete Succesfully"}
 
         try:
