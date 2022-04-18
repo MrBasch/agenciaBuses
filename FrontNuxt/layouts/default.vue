@@ -24,6 +24,11 @@ export default {
 }
 </script>
 <style>
+.header_{
+  display: flex;
+  justify-content: space-between;
+
+}
 .theme--dark.v-application {
     background: whitesmoke;
     color: #021C36;

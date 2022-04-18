@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h1>Travels</h1>
+        <div class="header_">
+          <h1>Travels</h1>
+          <button class="add" @click="open=!open"><v-icon>mdi-plus</v-icon></button>
+        </div>
         <ul>
             <li v-for="travel in travels" :key="travel.code">
                 <v-card height="5rem" class="travel-item">
@@ -25,6 +28,7 @@
 export default {
     data() {
       return {
+        open:false,
         travels: [
         ],
       }

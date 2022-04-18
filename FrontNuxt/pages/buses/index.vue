@@ -1,6 +1,6 @@
 <template>
     <div :key="buses.id">
-        <div class="header_bus">
+        <div class="header_">
           <h1>Buses</h1>
           <button class="add" @click="open=!open"><v-icon>mdi-plus</v-icon></button>
         </div>
@@ -11,30 +11,33 @@
                     <div class="item">
                         <h1>Bus code: {{bus.code}}</h1>
                         <div class="subtitle">
-                            <p>Code: {{bus.code}}</p>
-                            <p>Status: {{bus.start_time}}</p>
+                            <p>Status: {{bus.status}}</p>
                         </div>
                     </div>
                     <div class="buttons">
-                        <buttton class="update"><v-icon>mdi-pencil</v-icon></buttton>
+                        <buttton class="update" @click="edit=!edit"><v-icon>mdi-pencil</v-icon></buttton>
                         <button class="delete" @click="deleteBus(index=index,code=bus.code)"><v-icon>mdi-delete</v-icon></button>
                     </div>
                 </v-card>
             </li>
         </ul>
         <busModal :key="open" :open="open"/>
+        <editBusModal :key="edit" :edit="edit"/>
     </div>
 </template>
 
 <script>
 import BusModal from '@/components/busModal.vue';
+import editBusModal from '@/components/editBusModal.vue';
 export default {
     components:{
         BusModal,
+        editBusModal,
         },
     data() {
       return {
         open:false,
+        edit:false,
         buses: [
         ],
       }
@@ -63,7 +66,7 @@ export default {
             },
             cache:'default'
           }
-        ).then((res) => res.json().then(data => this.buses= data ))
+        ).then((res) => res.json().then(data => this.buses=data))
       },
     },
     created(){
@@ -74,11 +77,7 @@ export default {
 </script>
 
 <style scoped>
-.header_bus{
-  display: flex;
-  justify-content: space-between;
 
-}
 ul {
   display: flex;
   flex-direction: column;
