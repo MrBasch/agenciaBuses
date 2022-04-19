@@ -1,49 +1,49 @@
 <template>
     <div>
         <div class="header_">
-          <h1>Travels</h1>
+          <h1>Routes</h1>
           <button class="add" @click="open=!open"><v-icon>mdi-plus</v-icon></button>
         </div>
         <ul>
-            <li v-for="(travel,index) in travels" :key="travel.code">
+            <li v-for="(route, index) in routes" :key="route.code">
                 <v-card height="5rem" class="item_card">
                     <div class="item">
-                        <h1>Travel code: {{travel.code}}</h1>
+                        <h1>Route name: {{route.name}}</h1>
                         <div class="subtitle">
-                            <p>Code: {{travel.code}}</p>
-                            <p>Start time: {{travel.start_time}}</p>
-                            <p>End time: {{travel.end_time}}</p>
+                            <p>Code: {{route.code}}</p>
+                            <p>Status: {{route.status}}</p>
                         </div>
                     </div>
                     <div class="buttons">
                         <buttton class="update" @click="edit=!edit"><v-icon>mdi-pencil</v-icon></buttton>
-                        <button class="delete" @click="deleteTravel(index=index,code=travel.code)"><v-icon>mdi-delete</v-icon></button>
+                        <button class="delete" @click="deleteRoute(index=index,code=route.code)"><v-icon>mdi-delete</v-icon></button>
                     </div>
                 </v-card>
             </li>
         </ul>
-        <create-travel-modal :open="open"/>
-        <update-travel-modal :edit='edit'/>
+        <create-route-modal :open="open"/>
+        <update-route-modal :edit="edit"/>
     </div>
 </template>
 
 <script>
-import createTravelModal from '@/components/createTravelModal.vue';
-import updateTravelModal from '@/components/updateTravelModal.vue';
+import CreateRouteModal from '@/components/createRouteModal.vue';
+import UpdateRouteModal from '@/components/updateRouteModal.vue';
+// import updateTravelModal from '@/components/updateTravelModal.vue';
 export default {
-  components: { createTravelModal,updateTravelModal },
+  components: {CreateRouteModal,UpdateRouteModal },
     data() {
     return {
         edit:false,
         open:false,
-        travels: [
+        routes: [
         ],
       }
     },
     methods:{
-        async getTravels() {
+        async getRoutes() {
             await fetch(
-            'http://127.0.0.1:8000/back/travel',{
+            'http://127.0.0.1:8000/back/route',{
                 method:"GET",
                 mode:'cors',
                 headers:{
@@ -51,12 +51,15 @@ export default {
                 },
                 cache:'default'
             }
-            ).then((res) => res.json().then(data=> {this.travels = data}))
+            ).then((res) => res.json().then(data=> {
+                console.log("data =", data)
+                return this.routes = data
+            }))
         },
-        async deleteTravel(index,code){
-            this.travels.splice(index,1); //quita elemento de la data local
+        async deleteRoute(index,code){
+            this.routes.splice(index,1); //quita elemento de la data local
             await fetch(
-            `http://127.0.0.1:8000/back/travel?code=${code}`,{
+            `http://127.0.0.1:8000/back/route?code=${code}`,{
                 method:"DELETE",
                 mode:'cors',
                 headers:{
@@ -68,7 +71,7 @@ export default {
         },
     },
     created(){
-        this.getTravels()
+        this.getRoutes()
     },
 
 }

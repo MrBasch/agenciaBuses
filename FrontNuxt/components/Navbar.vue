@@ -13,7 +13,7 @@
       </div>
       <v-spacer/>
       <div class="nav-buttons">
-        <v-btn type="submit" border-color="black" class="mt-4" color="#417D7A" @click="logOut()"><v-icon>mdi-logout</v-icon></v-btn>
+        <v-btn type="submit" border-color="black" class="mt-4" color="#417D7A"><v-icon>mdi-logout</v-icon></v-btn>
       </div>
     </div>
   </nav>
@@ -23,12 +23,7 @@
   export default {
     name: 'Navbar',
     methods:{
-      logOut(){
-        this.$session.destroy()
-        localStorage.token = ""
-        this.$router.push("/login")
-      }
-    }
+    },
   };
 </script>
 <style lang="scss" scoped>

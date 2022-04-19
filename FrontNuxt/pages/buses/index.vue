@@ -1,5 +1,5 @@
 <template>
-    <div :key="buses.id">
+    <div>
         <div class="header_">
           <h1>Buses</h1>
           <button class="add" @click="open=!open"><v-icon>mdi-plus</v-icon></button>
@@ -7,7 +7,7 @@
         
         <ul>
             <li v-for="(bus, index) in buses" :key="bus.code">
-                <v-card height="5rem" class="bus-item">
+                <v-card height="5rem" class="item_card">
                     <div class="item">
                         <h1>Bus code: {{bus.code}}</h1>
                         <div class="subtitle">
@@ -21,18 +21,18 @@
                 </v-card>
             </li>
         </ul>
-        <busModal :key="open" :open="open"/>
-        <editBusModal :key="edit" :edit="edit"/>
+        <createBusModal :key="open" :open="open"/>
+        <updateBusModal :key="edit" :edit="edit"/>
     </div>
 </template>
 
 <script>
-import BusModal from '@/components/busModal.vue';
-import editBusModal from '@/components/editBusModal.vue';
+import createBusModal from '@/components/createBusModal.vue';
+import updateBusModal from '@/components/updateBusModal.vue';
 export default {
     components:{
-        BusModal,
-        editBusModal,
+        createBusModal,
+        updateBusModal,
         },
     data() {
       return {
@@ -94,7 +94,7 @@ h1, p, .v-icon{
   margin-left: 1rem;
     
 }
-.bus-item{
+.item_card{
   display: flex;
   justify-content: space-between;
   background-color: #EDE6DB;
