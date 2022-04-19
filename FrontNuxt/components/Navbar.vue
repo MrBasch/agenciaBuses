@@ -10,6 +10,7 @@
         <nuxt-link to="/passenger">Passenger</nuxt-link>
         <nuxt-link to="/driver">Driver</nuxt-link>
         <nuxt-link to="/city">City</nuxt-link>
+        <nuxt-link to="/station">Station</nuxt-link>
       </div>
       <v-spacer/>
       <div class="nav-buttons">
