@@ -28,7 +28,7 @@
               (state = state)
             )
           "
-          color="green"
+          color="#417D7A"
           >Add</v-btn
         >
       </v-card-actions>

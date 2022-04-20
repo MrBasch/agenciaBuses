@@ -3,8 +3,16 @@ from unittest.util import _MAX_LENGTH
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from travelManagement.models import (Bus, City, Driver, Passenger, Place,
-                                     Route, Station, Travel)
+from travelManagement.models import (
+    Bus,
+    City,
+    Driver,
+    Passenger,
+    Place,
+    Route,
+    Station,
+    Travel,
+)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,6 +40,7 @@ class CitySerializer(serializers.Serializer):
 
 
 class StationSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
     name = serializers.CharField(max_length=50)
     city = serializers.SerializerMethodField()
 
@@ -52,6 +61,7 @@ class BusSerializer(serializers.Serializer):
 
 
 class DriverSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
     name = serializers.CharField(max_length=50)
     rut = serializers.CharField(max_length=12)
     status = serializers.CharField(max_length=50)

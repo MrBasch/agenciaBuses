@@ -8,13 +8,13 @@ from .models import Bus, City, Driver, Passenger, Place, Route, Station, Travel
 from rest_framework.authtoken.models import Token
 
 # promedio de pasajeros por trayecto
-def average_passangers_for_route(route_code):
+def average_passengers_for_route(route_code):
     total_used_places = (
         Place.objects.select_related("travel__route")
         .filter(travel__route__code=route_code, available=False)
         .count()
     )
-    num_of_travels = Travel.objects.filter(route__code=route_code).count() * 10
+    num_of_travels = Travel.objects.filter(route__code=route_code).count()
     try:
         return total_used_places / num_of_travels
     except ZeroDivisionError:
@@ -22,20 +22,19 @@ def average_passangers_for_route(route_code):
 
 
 # Filtrar a todos los buses de un trayecto con más del N % de su capacidad vendida.
-def selling_buses_by_route(route_code: str, N: int):
+def selling_buses_by_route(route_code):
     travels = Travel.objects.filter(
         route__code=route_code, place__available=False
     ).annotate(places=Count("place"))
     buses = []
     for travel in travels:
-        if travel.places >= int(N):
-            buses.append(
-                {
-                    "bus_code": travel.bus.code,
-                    "bus_status": travel.bus.status,
-                    "places": travel.places,
-                }
-            )
+        buses.append(
+            {
+                "bus_code": travel.bus.code,
+                "bus_status": travel.bus.status,
+                "no_available_places": travel.places,
+            }
+        )
     return buses
 
 
@@ -99,8 +98,10 @@ def get_all_stations():
     return Station.objects.all()
 
 
-def get_or_create_station(name, code, city_id):
-    city_instance = City.objects.get(id=city_id)
+def get_or_create_station(name, code, city_code):
+    print("entra")
+    city_instance = get_city_by_code(code=city_code)
+    print("create station =", city_instance)
     if not code or not name or not city_instance:
         raise ValidationError
     station, created = Station.objects.get_or_create(
@@ -141,9 +142,10 @@ def create_station(station):
 
 
 def get_stations_by_list_code(station_list):
+    print("station _list . code", station_list)
     if not station_list:
         raise ValidationError("Invalid data")
-    return list(Station.objects.filter(id__in=station_list))
+    return list(Station.objects.filter(code__in=station_list))
 
 
 # ------------------------------STATION---------------------------------
@@ -307,6 +309,7 @@ def get_or_create_travel(code, code_route, id_driver, code_bus, start_time, end_
     driver = get_driver_by_id(id_driver)
     bus = get_bus_by_code(code_bus)
     route = get_route_by_code(code_route)
+    print(route)
     if not code or not driver or not bus or not route or not start_time or not end_time:
         raise ValidationError("Invalid data")
     travel, created = Travel.objects.get_or_create(
@@ -397,7 +400,7 @@ def get_or_create_place(code, available, code_travel):
     if not code or not travel:
         raise ValidationError("Invalid data")
     place, created = Place.objects.get_or_create(
-        code=code, defaults={"travel": travel, "available": available}
+        code=code, travel=travel, available=available
     )
     if created:
         place.save()

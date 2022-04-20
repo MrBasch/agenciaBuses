@@ -8,7 +8,7 @@
     </div>
 
     <ul>
-      <li v-for="(city, index) in cities" :key="city.rut">
+      <li v-for="(city, index) in cities" :key="city.code">
         <v-card height="5rem" class="item_card">
           <div class="item">
             <h1>Name: {{ city.name }}</h1>
@@ -20,7 +20,7 @@
             <buttton class="update" @click="edit = !edit"
               ><v-icon>mdi-pencil</v-icon></buttton
             >
-            <button class="delete" @click="deleteCity((code = city.code))">
+            <button class="delete" @click="deleteCity(index, city.code)">
               <v-icon>mdi-delete</v-icon>
             </button>
           </div>

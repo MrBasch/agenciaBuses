@@ -20,7 +20,10 @@
             <buttton class="update" @click="edit = !edit"
               ><v-icon>mdi-pencil</v-icon></buttton
             >
-            <button class="delete" @click="deleteStation(index)">
+            <button
+              class="delete"
+              @click="deleteStation((code = station.code), index)"
+            >
               <v-icon>mdi-delete</v-icon>
             </button>
           </div>
@@ -48,9 +51,9 @@ export default {
     };
   },
   methods: {
-    async deleteStation(index) {
+    async deleteStation(index, code) {
       this.stations.splice(index, 1); //quita elemento de la data local
-      await fetch(`http://127.0.0.1:8000/back/station?id=${index}`, {
+      await fetch(`http://127.0.0.1:8000/back/station?code=${code}`, {
         method: "DELETE",
         mode: "cors",
         headers: {
@@ -60,7 +63,7 @@ export default {
       }).then((res) => res.json().then((data) => console.log(data)));
     },
     async getStations() {
-      await fetch("http://127.0.0.1:8000/back/station", {
+      await fetch("http://127.0.0.1:8000/back/place", {
         method: "GET",
         mode: "cors",
         headers: {

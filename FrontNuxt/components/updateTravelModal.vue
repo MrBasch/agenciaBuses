@@ -20,7 +20,7 @@
         ></v-text-field>
         <v-select
           v-model="rut_driver"
-          :items="drivers"
+          :items="drivers_rut"
           label="Select a driver"
         ></v-select>
         <v-select
@@ -70,6 +70,7 @@ export default {
       code_bus: "",
       code_route: "",
       drivers: [],
+      drivers_rut: [],
       buses: [],
       routes: [],
     };
@@ -98,8 +99,11 @@ export default {
         "code_bus = ",
         code_bus
       );
+      const selected_driver = this.drivers.filter(
+        (driver) => driver.rut === rut_driver
+      );
       await fetch(
-        `http://127.0.0.1:8000/back/travel?code=${code}&new_code=${new_code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&rut_driver=${rut_driver},&code_bus=${code_bus}`,
+        `http://127.0.0.1:8000/back/travel?code=${code}&new_code=${new_code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&driver=${selected_driver[0].id}&bus=${code_bus}`,
         {
           method: "PUT",
           mode: "cors",
@@ -134,7 +138,12 @@ export default {
         cache: "default",
       }).then((res) =>
         res.json().then((data) => {
-          data.map((driver) => this.drivers.push(driver.rut));
+          data.map((driver) => {
+            this.drivers.push(driver);
+            this.drivers_rut.push(driver.rut);
+            console.log("driver", driver);
+            console.log("driver.id", driver.id);
+          });
         })
       );
     },
