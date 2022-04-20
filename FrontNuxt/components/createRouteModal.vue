@@ -20,14 +20,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          @click.stop="
-            saveRoute(
-              (code = code),
-              (name = name),
-              (list_stations = stations_selected),
-              (state = state)
-            )
-          "
+          @click.stop="saveRoute(name, code, stations_selected, state)"
           color="#417D7A"
           >Add</v-btn
         >
@@ -63,7 +56,7 @@ export default {
         state
       );
       await fetch(
-        `http://127.0.0.1:8000/back/route?code=${code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&rut_driver=${rut_driver},&code_bus=${code_bus}`,
+        `http://127.0.0.1:8000/back/route?code=${code}&name=${name}&stops=${list_stations}&status=${state}`,
         {
           method: "POST",
           mode: "cors",

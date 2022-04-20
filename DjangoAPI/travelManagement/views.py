@@ -46,29 +46,51 @@ class CreateData(APIView):
         services.get_or_create_city(name="Chillan", code="YAI")
         services.get_or_create_city(name="Coyhaique", code="CXQ")
 
-        services.get_or_create_station(name="San Borja", code="SNBJA", city_code="STG")
+        services.get_or_create_station(name="San-Borja", code="SNBJA", city_code="STG")
         services.get_or_create_station(name="Alameda", code="ALMD", city_code="STG")
         services.get_or_create_station(
-            name="Terminal Sur", code="TSUR", city_code="STG"
+            name="Terminal-Sur", code="TSUR", city_code="STG"
         )
         services.get_or_create_station(
-            name="Estacion Buin", code="EBN", city_code="BUI"
+            name="Estacion-Buin", code="EBN", city_code="BUI"
         )
         services.get_or_create_station(
-            name="Terminal del Centro", code="TCEN", city_code="YAI"
+            name="Terminal-del-Centro", code="TCEN", city_code="YAI"
         )
         services.get_or_create_station(
-            name="Terminal Maria Teresa", code="TMT", city_code="YAI"
+            name="Terminal-Maria-Teresa", code="TMT", city_code="YAI"
         )
         services.get_or_create_station(
-            name="Terminal Algarrobo", code="TAL", city_code="ALG"
+            name="Terminal-Algarrobo", code="TAL", city_code="ALG"
         )
         services.get_or_create_station(
-            name="Terminal Aguilas Patagonicas", code="TAP", city_code="CXQ"
+            name="Terminal-Aguilas-Patagonicas", code="TAP", city_code="CXQ"
         )
         services.get_or_create_station(
-            name="Terminal Municipal Coyhaique", code="TMC", city_code="CXQ"
+            name="Terminal-Municipal-Coyhaique", code="TMC", city_code="CXQ"
         )
+        services.get_or_create_route(
+            name="Santiago-Chillán",
+            code="STG-YAI",
+            station_list=["SNBJA", "ALMD", "TCEN"],
+            status="AVAILABLE",
+        )
+        services.get_or_create_route(
+            name="Santiago-Buin",
+            code="STG-BUI",
+            station_list=["SNBJA", "TAHL"],
+            status="AVAILABLE",
+        )
+        services.get_or_create_route(
+            name="Buin-Algarrobo",
+            code="BUI-ALG",
+            station_list=["EBN", "TAL"],
+            status="AVAILABLE",
+        )
+        services.get_or_create_bus(code="Bus1", status="AVAILABLE")
+        services.get_or_create_bus(code="Bus2", status="AVAILABLE")
+        services.get_or_create_bus(code="Bus3", status="AVAILABLE")
+        services.get_or_create_bus(code="Bus4", status="AVAILABLE")
 
         data = {"message": "the data was created succesfully"}
         return Response(data)
@@ -201,6 +223,7 @@ class RouteAPI(APIView):
         code = request.GET.get("code")
         station_list = request.GET.get("stops")
         state = request.GET.get("status")
+        print("station list ", station_list)
         route, created = services.get_or_create_route(
             name=name, code=code, station_list=station_list, status=state
         )
