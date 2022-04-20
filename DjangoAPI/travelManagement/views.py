@@ -268,7 +268,7 @@ class RouteAPI(APIView):
         code = request.GET.get("code")
         station_list = request.GET.get("stops")
         state = request.GET.get("status")
-        print("station list ", station_list)
+        print("station list VIEW", station_list)
         route, created = services.get_or_create_route(
             name=name, code=code, station_list=station_list, status=state
         )

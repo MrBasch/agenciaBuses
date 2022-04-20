@@ -11,7 +11,7 @@
         <nuxt-link to="/driver">Driver</nuxt-link>
         <nuxt-link to="/city">City</nuxt-link>
         <nuxt-link to="/station">Station</nuxt-link>
-        <nuxt-link to="/place">place</nuxt-link>
+        <nuxt-link to="/place">Place</nuxt-link>
       </div>
       <v-spacer />
       <div class="nav-buttons">

@@ -22,16 +22,10 @@
         <v-spacer></v-spacer>
         <v-btn
           @click.stop="
-            updateRoute(
-              (name = name),
-              (code = code),
-              (new_code = new_code),
-              (list_stations = stations_selected),
-              (state = state)
-            )
+            updateRoute(name, code, new_code, stations_selected, state)
           "
           color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -68,7 +62,7 @@ export default {
         state
       );
       await fetch(
-        `http://127.0.0.1:8000/back/route?code=${code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&rut_driver=${rut_driver},&code_bus=${code_bus}`,
+        `http://127.0.0.1:8000/back/route?code=${code}&new_code=${new_code}&name=${name}&stops=${list_stations}&status=${state}`,
         {
           method: "PUT",
           mode: "cors",
@@ -77,7 +71,12 @@ export default {
           },
           cache: "default",
         }
-      ).then((res) => res.json().then((data) => console.log(data)));
+      ).then((res) =>
+        res.json().then((data) => {
+          console.log(data);
+          this.edit = !this.edit;
+        })
+      );
     },
     async getStations() {
       await fetch("http://127.0.0.1:8000/back/station", {

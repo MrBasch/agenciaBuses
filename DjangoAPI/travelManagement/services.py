@@ -154,6 +154,13 @@ def get_stations_by_list_code(station_list):
     return list(Station.objects.filter(code__in=station_list))
 
 
+def get_stations_by_list_name(station_list):
+    print("station _list . code", station_list)
+    if not station_list:
+        raise ValidationError("Invalid data")
+    return list(Station.objects.filter(name__in=station_list))
+
+
 # ------------------------------STATION---------------------------------
 
 # ------------------------------ ROUTES ---------------------------------
@@ -176,7 +183,8 @@ def get_route_by_code(code):
 
 
 def get_or_create_route(name, code, station_list, status):
-    stations = get_stations_by_list_code(station_list)
+    station_list = station_list.split(",")
+    stations = get_stations_by_list_name(station_list)
     if status not in ROUTE_STATUSES or not code or not name or not stations:
         raise ValidationError("Invalid data")
 
@@ -190,7 +198,8 @@ def get_or_create_route(name, code, station_list, status):
 
 
 def update_or_create_route(name, code, station_list, status, new_code):
-    stations = get_stations_by_list_code(station_list)
+    station_list = station_list.split(",")
+    stations = get_stations_by_list_name(station_list)
     if status not in ROUTE_STATUSES or not code or not name or not stations:
         raise ValidationError("Invalid data")
     if not new_code:
