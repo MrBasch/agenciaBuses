@@ -311,8 +311,8 @@ def get_all_travels():
     return Travel.objects.all()
 
 
-def get_or_create_travel(code, code_route, id_driver, code_bus, start_time, end_time):
-    driver = get_driver_by_id(id_driver)
+def get_or_create_travel(code, code_route, rut_driver, code_bus, start_time, end_time):
+    driver = get_driver_by_rut(rut_driver)
     bus = get_bus_by_code(code_bus)
     route = get_route_by_code(code_route)
     print(route)
@@ -334,16 +334,16 @@ def get_or_create_travel(code, code_route, id_driver, code_bus, start_time, end_
 
 
 def update_or_create_travel(
-    code, new_code, code_route, id_driver, code_bus, start_time, end_time
+    code, new_code, code_route, rut_driver, code_bus, start_time, end_time
 ):
-    driver = get_driver_by_id(id_driver)
+    driver = get_driver_by_rut(rut_driver)
     bus = get_bus_by_code(code_bus)
     route = get_route_by_code(code_route)
     if not code or not driver or not bus or not route or not start_time or not end_time:
         raise ValidationError("Invalid data")
     if not new_code:
         new_code = code
-    travel, created = Travel.objects.get_or_create(
+    travel, created = Travel.objects.update_or_create(
         code=code,
         defaults={
             "bus": bus,

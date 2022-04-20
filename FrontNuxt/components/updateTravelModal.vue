@@ -39,17 +39,17 @@
         <v-btn
           @click.stop="
             updateTravel(
-              (code = code),
-              (new_code = new_code),
-              (code_route = code_route),
-              (start_time = start_time),
-              (end_time = end_time),
-              (rut_driver = rut_driver),
-              (code_bus = code_bus)
+              code,
+              new_code,
+              code_route,
+              start_time,
+              end_time,
+              rut_driver,
+              code_bus
             )
           "
           color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -103,7 +103,7 @@ export default {
         (driver) => driver.rut === rut_driver
       );
       await fetch(
-        `http://127.0.0.1:8000/back/travel?code=${code}&new_code=${new_code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&driver=${selected_driver[0].id}&bus=${code_bus}`,
+        `http://127.0.0.1:8000/back/travel?code=${code}&new_code=${new_code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&driver=${selected_driver[0].rut}&bus=${code_bus}`,
         {
           method: "PUT",
           mode: "cors",
@@ -141,8 +141,6 @@ export default {
           data.map((driver) => {
             this.drivers.push(driver);
             this.drivers_rut.push(driver.rut);
-            console.log("driver", driver);
-            console.log("driver.id", driver.id);
           });
         })
       );

@@ -92,6 +92,51 @@ class CreateData(APIView):
         services.get_or_create_bus(code="Bus3", status="AVAILABLE")
         services.get_or_create_bus(code="Bus4", status="AVAILABLE")
 
+        services.get_or_create_driver(
+            name="Nicolas A", rut="19.123.456-8", status="AVAILABLE"
+        )
+        services.get_or_create_driver(
+            name="Jhon J", rut="19.123.432-1", status="AVAILABLE"
+        )
+        services.get_or_create_driver(
+            name="Cristobal", rut="19.223.432-5", status="AVAILABLE"
+        )
+        services.get_or_create_driver(
+            name="Juan", rut="12.123.472-1", status="AVAILABLE"
+        )
+        services.get_or_create_travel(
+            code="T1",
+            code_route="STG-YAI",
+            code_bus="Bus1",
+            rut_driver="19.123.456-8",
+            start_time="2022-02-04T10:30:00Z",
+            end_time="2022-02-04T18:30:00Z",
+        )
+        services.get_or_create_travel(
+            code="T2",
+            code_route="STG-BUI",
+            code_bus="Bus2",
+            rut_driver="19.123.432-1",
+            start_time="2022-02-04T10:30:00Z",
+            end_time="2022-03-04T18:30:00Z",
+        )
+        services.get_or_create_travel(
+            code="T3",
+            code_route="BUI-ALG",
+            code_bus="Bus3",
+            rut_driver="19.223.432-5",
+            start_time="2022-04-04T10:30:00Z",
+            end_time="2022-05-04T18:30:00Z",
+        )
+        services.get_or_create_travel(
+            code="T4",
+            code_route="BUI-ALG",
+            code_bus="Bus2",
+            rut_driver="19.123.432-1",
+            start_time="2022-04-04T10:30:00Z",
+            end_time="2022-05-04T18:30:00Z",
+        )
+
         data = {"message": "the data was created succesfully"}
         return Response(data)
 
@@ -372,12 +417,12 @@ class TravelAPI(APIView):
         code_route = request.GET.get("route")
         start_time = request.GET.get("start_time")
         end_time = request.GET.get("end_time")
-        id_driver = request.GET.get("driver")
+        rut_driver = request.GET.get("driver")
         code_bus = request.GET.get("bus")
         travel, created = services.get_or_create_travel(
             code=code,
             code_bus=code_bus,
-            id_driver=id_driver,
+            rut_driver=rut_driver,
             code_route=code_route,
             start_time=start_time,
             end_time=end_time,
@@ -396,13 +441,13 @@ class TravelAPI(APIView):
         code_route = request.GET.get("route")
         start_time = request.GET.get("start_time")
         end_time = request.GET.get("end_time")
-        id_driver = request.GET.get("driver")
+        rut_driver = request.GET.get("driver")
         code_bus = request.GET.get("bus")
         travel, created = services.update_or_create_travel(
             code=code,
             new_code=new_code,
             code_bus=code_bus,
-            id_driver=id_driver,
+            rut_driver=rut_driver,
             code_route=code_route,
             start_time=start_time,
             end_time=end_time,
@@ -410,7 +455,6 @@ class TravelAPI(APIView):
         serializer = serializers.TravelSerializer(travel)
         data = {"data": serializer.data, "message": "the travel was added succesfully"}
         if not created:
-            services.create_travel(travel=travel)
             data["message"] = "the travel was update succesfully"
             return Response(data=data, status=status.HTTP_200_OK)
         services.create_travel(travel=travel)
