@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div id="header">
-      <div class="title_navbar" href="/"><h1>Reisebüro</h1></div>
-      <v-spacer/>
+      <div class="title_navbar" href="/">Reisebüro</div>
+      <v-spacer />
       <div class="navbar-start">
         <nuxt-link to="/buses">Buses</nuxt-link>
         <nuxt-link to="/route">Route</nuxt-link>
@@ -12,35 +12,34 @@
         <nuxt-link to="/city">City</nuxt-link>
         <nuxt-link to="/station">Station</nuxt-link>
       </div>
-      <v-spacer/>
+      <v-spacer />
       <div class="nav-buttons">
-        <v-btn type="submit" border-color="black" class="mt-4" color="#417D7A"><v-icon>mdi-logout</v-icon></v-btn>
+        <v-btn type="submit" border-color="black" class="mt-4" color="#417D7A"
+          ><v-icon>mdi-logout</v-icon></v-btn
+        >
       </div>
     </div>
   </nav>
-  
 </template>
 <script>
-  export default {
-    name: 'Navbar',
-    methods:{
-    },
-  };
+export default {
+  name: "Navbar",
+  methods: {},
+};
 </script>
 <style lang="scss" scoped>
-.title_navbar{
-    font-size: 1.5rem;
-    color:white;
+.title_navbar {
+  font-size: 2.5rem;
+  color: white;
 }
-.navbar{
-  background-color:#1A3C40;
-  
+.navbar {
+  background-color: #1a3c40;
 }
-.nav-buttons{
+.nav-buttons {
   display: flex;
   margin-right: 1rem;
   position: relative;
-  bottom:9px;
+  bottom: 9px;
 }
 .navbar-start {
   a {
@@ -48,16 +47,16 @@
     color: white;
   }
 }
-#white{
-  color:white;
+#white {
+  color: white;
 }
-#header{
+#header {
   align-items: center;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.title{
+.title {
   h1 {
     font-size: 2.5rem;
   }

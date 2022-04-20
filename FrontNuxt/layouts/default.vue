@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar/>
+    <Navbar />
     <v-main class="main">
       <v-container>
         <Nuxt />
@@ -10,28 +10,47 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
+import Navbar from "@/components/Navbar";
 export default {
-  name: 'DefaultLayout',
-  components:{
-        Navbar,
-    },
-  data () {
+  name: "DefaultLayout",
+  components: {
+    Navbar,
+  },
+  data() {
     return {
       clipped: false,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 <style>
-.header_{
+/* display cards */
+.header_ {
   display: flex;
   justify-content: space-between;
+}
+.subtitle {
+  display: flex;
+  gap: 0.8rem;
+}
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  list-style: none;
+}
+h1,
+p {
+  color: #021c36;
+}
 
+/**/
+.cardTitle {
+  background-color: #1a3c40;
 }
 .theme--dark.v-application {
-    background: whitesmoke;
-    color: #021C36;
+  background: whitesmoke;
+  color: #cfd9e4;
 }
 * {
   box-sizing: border-box;
@@ -48,8 +67,4 @@ a {
   color: #666;
   text-decoration: none;
 }
-ul {
-  list-style: none;
-}
-
 </style>
