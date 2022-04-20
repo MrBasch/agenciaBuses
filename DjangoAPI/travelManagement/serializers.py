@@ -42,6 +42,7 @@ class CitySerializer(serializers.Serializer):
 class StationSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     name = serializers.CharField(max_length=50)
+    code = serializers.CharField(max_length=50)
     city = serializers.SerializerMethodField()
 
     def get_city(self, instance):

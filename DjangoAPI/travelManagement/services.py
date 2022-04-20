@@ -99,9 +99,7 @@ def get_all_stations():
 
 
 def get_or_create_station(name, code, city_code):
-    print("entra")
     city_instance = get_city_by_code(code=city_code)
-    print("create station =", city_instance)
     if not code or not name or not city_instance:
         raise ValidationError
     station, created = Station.objects.get_or_create(
@@ -112,8 +110,8 @@ def get_or_create_station(name, code, city_code):
     return station, created
 
 
-def update_or_create_station(code, name, new_code, city_id):
-    city_instance = City.objects.get(id=city_id)
+def update_or_create_station(code, name, new_code, city_code):
+    city_instance = get_city_by_code(code=city_code)
     if not code or not name or not city_instance:
         raise ValidationError("Invalid data")
     if not new_code:
@@ -127,6 +125,14 @@ def get_station_by_code(code):
     if not code:
         raise ValidationError("Invalid data")
     return Station.objects.get(code=code)
+
+
+def get_station_by_id(id):
+    print("entra")
+    print("A =", Station.objects.get(id=id))
+    if not id:
+        raise ValidationError("Invalid data")
+    return Station.objects.get(id=id)
 
 
 def delete_station(station):

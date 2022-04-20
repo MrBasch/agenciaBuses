@@ -51,21 +51,23 @@ class CreateData(APIView):
         services.get_or_create_station(
             name="Terminal Sur", code="TSUR", city_code="STG"
         )
-        services.get_or_create_station(name="Estacion Buin", code="EBN", city_id="BUI")
         services.get_or_create_station(
-            name="Terminal del Centro", code="TCEN", city_id="YAI"
+            name="Estacion Buin", code="EBN", city_code="BUI"
         )
         services.get_or_create_station(
-            name="Terminal Maria Teresa", code="TMT", city_id="YAI"
+            name="Terminal del Centro", code="TCEN", city_code="YAI"
         )
         services.get_or_create_station(
-            name="Terminal Algarrobo", code="TAL", city_id="ALG"
+            name="Terminal Maria Teresa", code="TMT", city_code="YAI"
         )
         services.get_or_create_station(
-            name="Terminal Aguilas Patagonicas", code="TAP", city_id="CXQ"
+            name="Terminal Algarrobo", code="TAL", city_code="ALG"
         )
         services.get_or_create_station(
-            name="Terminal Municipal Coyhaique", code="TMC", city_id="CXQ"
+            name="Terminal Aguilas Patagonicas", code="TAP", city_code="CXQ"
+        )
+        services.get_or_create_station(
+            name="Terminal Municipal Coyhaique", code="TMC", city_code="CXQ"
         )
 
         data = {"message": "the data was created succesfully"}
@@ -147,11 +149,9 @@ class StationAPI(APIView):
     def post(self, request):
         name = request.GET.get("name")
         code = request.GET.get("code")
-        city_id = request.GET.get("city")
+        city_code = request.GET.get("city_code")
 
-        station, created = services.get_or_create_station(
-            name=name, code=code, city_id=city_id
-        )
+        station, created = services.get_or_create_station(name, code, city_code)
         serializer = serializers.StationSerializer(station)
         data = {"data": serializer.data, "message": "was added succesfully"}
 
@@ -177,9 +177,9 @@ class StationAPI(APIView):
         code = request.GET.get("code")
         name = request.GET.get("name")
         new_code = request.GET.get("new_code")
-        city_id = request.GET.get("city_id")
+        city_code = request.GET.get("city_code")
         station, created = services.update_or_create_station(
-            name=name, code=code, new_code=new_code, city_id=city_id
+            name=name, code=code, new_code=new_code, city_code=city_code
         )
         serializer = serializers.StationSerializer(station)
         data = {"data": serializer.data, "message": "Update Succesfully"}

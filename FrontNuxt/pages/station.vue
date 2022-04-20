@@ -13,6 +13,7 @@
           <div class="item">
             <h1>Name: {{ station.name }}</h1>
             <div class="subtitle">
+              <p>Code: {{ station.code }}</p>
               <p>City: {{ station.city.name }}</p>
             </div>
           </div>
@@ -20,7 +21,7 @@
             <buttton class="update" @click="edit = !edit"
               ><v-icon>mdi-pencil</v-icon></buttton
             >
-            <button class="delete" @click="deleteStation(index)">
+            <button class="delete" @click="deleteStation(index, station.id)">
               <v-icon>mdi-delete</v-icon>
             </button>
           </div>
@@ -48,9 +49,9 @@ export default {
     };
   },
   methods: {
-    async deleteStation(index) {
+    async deleteStation(index, id) {
       this.stations.splice(index, 1); //quita elemento de la data local
-      await fetch(`http://127.0.0.1:8000/back/station?id=${index}`, {
+      await fetch(`http://127.0.0.1:8000/back/station?id=${id}`, {
         method: "DELETE",
         mode: "cors",
         headers: {
@@ -70,7 +71,7 @@ export default {
       }).then((res) =>
         res.json().then((data) => {
           console.log("data =", data);
-          return (this.stations = data);
+          this.stations = data;
         })
       );
     },

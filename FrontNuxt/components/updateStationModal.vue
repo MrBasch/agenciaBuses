@@ -10,19 +10,17 @@
           label="Enter station new_code"
         ></v-text-field>
         <v-select
-          v-model="city"
-          :items="cities"
+          v-model="city_name"
+          :items="cities_name"
           label="Select a city"
         ></v-select>
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          @click.stop="
-            updateStation((name = name), (code = code), (city_id = city.id))
-          "
+          @click.stop="updateStation(name, code, new_code, city_name)"
           color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -37,14 +35,17 @@ export default {
       code: "",
       new_code: "",
       name: "",
+      cities_name: [],
       cities: [],
-      city: "",
+      city_name: "",
     };
   },
   methods: {
-    async updateStation(name, code, new_code, city_id) {
+    async updateStation(name, code, new_code, city_name) {
+      const city = this.cities.filter((city) => city.name === city_name);
+      console.log("city = ", city);
       await fetch(
-        `http://127.0.0.1:8000/back/station?code=${code}&name=${name}&new_code=${new_code}&city_id=${city_id}`,
+        `http://127.0.0.1:8000/back/station?code=${code}&name=${name}&new_code=${new_code}&city_code=${city[0].code}`,
         {
           method: "PUT",
           mode: "cors",
@@ -65,7 +66,10 @@ export default {
         cache: "default",
       }).then((res) =>
         res.json().then((data) => {
-          data.map((city) => this.cities.push(city.name));
+          data.map((city) => {
+            this.cities.push(city);
+            this.cities_name.push(city.name);
+          });
         })
       );
     },
