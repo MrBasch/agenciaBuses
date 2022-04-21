@@ -9,9 +9,10 @@ https://tecnonucleous.com/2018/01/28/como-instalar-pip-para-python-en-windows-ma
 https://codingpotions.com/npm-tutorial
 
 Paso 1: Clonar el proyecto de github
-https://github.com/MrBasch/agenciaBuses.git
+Dirigase a la carpeta donde desee instalar la aplicacion y clone con el comando 
+git clone https://github.com/MrBasch/agenciaBuses.git
 
-Crear ambiente de trabajo (virtual environment) a elección, personalmente use venv de python (python3 -m venv venv/ )
+Crear y active el ambiente de trabajo (virtual environment) a elección, personalmente use venv de python (python3 -m venv venv/ )
 https://towardsdatascience.com/virtual-environments-104c62d48c54#ee81
 
 Instalar requerimientos del proyecto
