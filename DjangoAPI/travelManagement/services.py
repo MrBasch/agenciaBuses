@@ -167,7 +167,7 @@ def get_stations_by_list_name(station_list):
 
 
 def get_all_routes():
-    return Route.objects.all()
+    return Route.objects.annotate(places=Count("travel__place__available"))
 
 
 def delete_route(route):

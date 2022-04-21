@@ -21,6 +21,7 @@
             <div class="subtitle">
               <p>Code: {{ route.code }}</p>
               <p>Status: {{ route.status }}</p>
+              <p>Average selling places: {{ route.place }}</p>
             </div>
           </div>
           <div class="buttons">
