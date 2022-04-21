@@ -2,9 +2,14 @@
   <div>
     <div class="header_">
       <h1>Passenger</h1>
-      <button class="add" @click="open = !open">
-        <v-icon>mdi-plus</v-icon>
-      </button>
+      <div class="buttons_header">
+        <button class="add" @click="open = !open">
+          <v-icon>mdi-plus</v-icon>
+        </button>
+        <buttton class="update" @click="edit = !edit">
+          <v-icon>mdi-pencil</v-icon>
+        </buttton>
+      </div>
     </div>
 
     <ul>
@@ -17,9 +22,6 @@
             </div>
           </div>
           <div class="buttons">
-            <buttton class="update" @click="edit = !edit"
-              ><v-icon>mdi-pencil</v-icon></buttton
-            >
             <button class="delete" @click="deletePassenger((index = index))">
               <v-icon>mdi-delete</v-icon>
             </button>

@@ -137,6 +137,50 @@ class CreateData(APIView):
             end_time="2022-05-04T18:30:00Z",
         )
 
+        services.get_or_create_place(code_travel="T1", code="A1", available=True)
+        services.get_or_create_place(code_travel="T1", code="A2", available=False)
+        services.get_or_create_place(code_travel="T1", code="A3", available=False)
+        services.get_or_create_place(code_travel="T1", code="A4", available=False)
+        services.get_or_create_place(code_travel="T1", code="A5", available=False)
+        services.get_or_create_place(code_travel="T1", code="A6", available=False)
+        services.get_or_create_place(code_travel="T1", code="A7", available=False)
+        services.get_or_create_place(code_travel="T1", code="A8", available=False)
+        services.get_or_create_place(code_travel="T1", code="A9", available=True)
+        services.get_or_create_place(code_travel="T1", code="A10", available=True)
+
+        services.get_or_create_place(code_travel="T2", code="B1", available=False)
+        services.get_or_create_place(code_travel="T2", code="B2", available=False)
+        services.get_or_create_place(code_travel="T2", code="B3", available=False)
+        services.get_or_create_place(code_travel="T2", code="B4", available=False)
+        services.get_or_create_place(code_travel="T2", code="B5", available=False)
+        services.get_or_create_place(code_travel="T2", code="B6", available=False)
+        services.get_or_create_place(code_travel="T2", code="B7", available=True)
+        services.get_or_create_place(code_travel="T2", code="B8", available=True)
+        services.get_or_create_place(code_travel="T2", code="B9", available=True)
+        services.get_or_create_place(code_travel="T2", code="B10", available=True)
+
+        services.get_or_create_place(code_travel="T3", code="C1", available=True)
+        services.get_or_create_place(code_travel="T3", code="C3", available=True)
+        services.get_or_create_place(code_travel="T3", code="C3", available=True)
+        services.get_or_create_place(code_travel="T3", code="C4", available=True)
+        services.get_or_create_place(code_travel="T3", code="C5", available=False)
+        services.get_or_create_place(code_travel="T3", code="C6", available=False)
+        services.get_or_create_place(code_travel="T3", code="C7", available=False)
+        services.get_or_create_place(code_travel="T3", code="C8", available=False)
+        services.get_or_create_place(code_travel="T3", code="C9", available=False)
+        services.get_or_create_place(code_travel="T3", code="C10", available=False)
+
+        services.get_or_create_place(code_travel="T4", code="D1", available=True)
+        services.get_or_create_place(code_travel="T4", code="D2", available=False)
+        services.get_or_create_place(code_travel="T4", code="D3", available=True)
+        services.get_or_create_place(code_travel="T4", code="D4", available=False)
+        services.get_or_create_place(code_travel="T4", code="D5", available=False)
+        services.get_or_create_place(code_travel="T4", code="D6", available=False)
+        services.get_or_create_place(code_travel="T4", code="D7", available=False)
+        services.get_or_create_place(code_travel="T4", code="D8", available=False)
+        services.get_or_create_place(code_travel="T4", code="D9", available=False)
+        services.get_or_create_place(code_travel="T4", code="D10", available=False)
+
         data = {"message": "the data was created succesfully"}
         return Response(data)
 
@@ -268,7 +312,7 @@ class RouteAPI(APIView):
         code = request.GET.get("code")
         station_list = request.GET.get("stops")
         state = request.GET.get("status")
-        print("station list VIEW", station_list)
+        print("stations = ", station_list)
         route, created = services.get_or_create_route(
             name=name, code=code, station_list=station_list, status=state
         )
@@ -537,9 +581,9 @@ class PassengerAPI(APIView):
         rut = request.GET.get("rut")
         new_rut = request.GET.get("new_rut")
         passenger, created = services.update_or_create_passenger(
+            rut=rut,
             place_code=place_code,
             name=name,
-            rut=rut,
             new_rut=new_rut,
         )
         serializer = serializers.PassengerSerializer(passenger)

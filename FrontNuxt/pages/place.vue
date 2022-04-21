@@ -1,59 +1,59 @@
 <template>
   <div>
     <div class="header_">
-      <h1>Station</h1>
-      <button class="add" @click="open = !open">
-        <v-icon>mdi-plus</v-icon>
-      </button>
+      <h1>Place</h1>
+      <div class="buttons_header">
+        <button class="add" @click="open = !open">
+          <v-icon>mdi-plus</v-icon>
+        </button>
+        <buttton class="update" @click="edit = !edit">
+          <v-icon>mdi-pencil</v-icon>
+        </buttton>
+      </div>
     </div>
-
     <ul>
-      <li v-for="(station, index) in stations" :key="station.rut">
+      <li v-for="(place, index) in places" :key="place.code">
         <v-card height="5rem" class="item_card">
           <div class="item">
-            <h1>Name: {{ station.name }}</h1>
+            <h1>Code: {{ place.code }}</h1>
             <div class="subtitle">
-              <p>City: {{ station.city.name }}</p>
+              <p>travel code: {{ place.travel.code }}</p>
+              <p v-if="place.available">Status: Available</p>
+              <p v-else>Status: No Available</p>
             </div>
           </div>
           <div class="buttons">
-            <buttton class="update" @click="edit = !edit"
-              ><v-icon>mdi-pencil</v-icon></buttton
-            >
-            <button
-              class="delete"
-              @click="deleteStation((code = station.code), index)"
-            >
+            <button class="delete" @click="deletePlace(index, place.code)">
               <v-icon>mdi-delete</v-icon>
             </button>
           </div>
         </v-card>
       </li>
     </ul>
-    <createStationModal :key="open" :open="open" />
-    <updateStationModal :key="edit" :edit="edit" />
+    <createPlaceModal :key="open" :open="open" />
+    <updatePlaceModal :key="edit" :edit="edit" />
   </div>
 </template>
 
 <script>
-import createStationModal from "@/components/createStationModal.vue";
-import updateStationModal from "@/components/updateStationModal.vue";
+import createPlaceModal from "@/components/createPlaceModal.vue";
+import updatePlaceModal from "@/components/updatePlaceModal.vue";
 export default {
   components: {
-    createStationModal,
-    updateStationModal,
+    createPlaceModal,
+    updatePlaceModal,
   },
   data() {
     return {
       open: false,
       edit: false,
-      stations: [],
+      places: [],
     };
   },
   methods: {
-    async deleteStation(index, code) {
-      this.stations.splice(index, 1); //quita elemento de la data local
-      await fetch(`http://127.0.0.1:8000/back/station?code=${code}`, {
+    async deletePlace(index, code) {
+      this.places.splice(index, 1); //quita elemento de la data local
+      await fetch(`http://127.0.0.1:8000/back/place?code=${code}`, {
         method: "DELETE",
         mode: "cors",
         headers: {
@@ -62,7 +62,7 @@ export default {
         cache: "default",
       }).then((res) => res.json().then((data) => console.log(data)));
     },
-    async getStations() {
+    async getPlaces() {
       await fetch("http://127.0.0.1:8000/back/place", {
         method: "GET",
         mode: "cors",
@@ -73,13 +73,13 @@ export default {
       }).then((res) =>
         res.json().then((data) => {
           console.log("data =", data);
-          return (this.stations = data);
+          return (this.places = data);
         })
       );
     },
   },
   created() {
-    this.getStations();
+    this.getPlaces();
   },
 };
 </script>

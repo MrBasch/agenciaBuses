@@ -1,26 +1,24 @@
 <template>
   <v-dialog max-width="500px" v-model="open">
     <v-card class="addDialog">
-      <v-card-title class="cardTitle">Add Route</v-card-title>
+      <v-card-title class="cardTitle">Add Place</v-card-title>
       <v-form>
-        <v-text-field v-model="name" label="Enter name"></v-text-field>
-        <v-text-field v-model="code" label="Enter code"></v-text-field>
-        <v-select
-          multiple
-          v-model="stations_selected"
-          :items="stations_name"
-          label="Select stations"
-        ></v-select>
+        <v-text-field v-model="code" label="Enter place code"></v-text-field>
         <v-select
           v-model="state"
           :items="status"
-          label="Select A Status"
+          label="is available?"
+        ></v-select>
+        <v-select
+          v-model="selected_travel"
+          :items="travels"
+          label="Select a travel"
         ></v-select>
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          @click.stop="saveRoute(name, code, stations_selected, state)"
+          @click.stop="savePlace(code, state, selected_travel)"
           color="#417D7A"
           >Add</v-btn
         >
@@ -30,24 +28,21 @@
 </template>
 <script>
 export default {
-  name: "createRouteModal",
+  name: "createPlaceModal",
   props: ["open"],
   data() {
     return {
-      name: "",
       code: "",
       state: "",
-      stations_selected: [],
-      stations: [],
-      stations_name: [],
-      routes: [],
-      status: ["AVAILABLE", "CLOSED", "UNAVAILABLE"],
+      status: ["True", "False"],
+      selected_travel: "",
+      travels: [],
     };
   },
   methods: {
-    async saveRoute(name, code, list_stations, state) {
+    async savePlace(code, available, selected_travel) {
       await fetch(
-        `http://127.0.0.1:8000/back/route?code=${code}&name=${name}&stops=${list_stations}&status=${state}`,
+        `http://127.0.0.1:8000/back/place?code=${code}&available=${available}&travel=${selected_travel}`,
         {
           method: "POST",
           mode: "cors",
@@ -58,8 +53,8 @@ export default {
         }
       ).then((res) => res.json().then((data) => console.log(data)));
     },
-    async getStations() {
-      await fetch("http://127.0.0.1:8000/back/station", {
+    async getTravels() {
+      await fetch("http://127.0.0.1:8000/back/travel", {
         method: "GET",
         mode: "cors",
         headers: {
@@ -68,16 +63,13 @@ export default {
         cache: "default",
       }).then((res) =>
         res.json().then((data) => {
-          data.map((station) => {
-            this.stations.push(station);
-            this.stations_name.push(station.name);
-          });
+          data.map((travel) => this.travels.push(travel.code));
         })
       );
     },
   },
   created() {
-    this.getStations();
+    this.getTravels();
   },
 };
 </script>

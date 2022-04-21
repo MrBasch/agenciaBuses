@@ -85,20 +85,6 @@ export default {
       rut_driver,
       code_bus
     ) {
-      console.log(
-        "code = ",
-        code,
-        "code_route =",
-        code_route,
-        "starttime=",
-        start_time,
-        "end_time = ",
-        end_time,
-        "rut_driver =",
-        rut_driver,
-        "code_bus = ",
-        code_bus
-      );
       const selected_driver = this.drivers.filter(
         (driver) => driver.rut === rut_driver
       );

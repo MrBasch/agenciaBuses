@@ -49,18 +49,6 @@ export default {
   },
   methods: {
     async updateRoute(name, code, new_code, list_stations, state) {
-      console.log(
-        "code = ",
-        code,
-        "new_code = ",
-        new_code,
-        "name =",
-        name,
-        "list_stations = ",
-        list_stations,
-        "state = ",
-        state
-      );
       await fetch(
         `http://127.0.0.1:8000/back/route?code=${code}&new_code=${new_code}&name=${name}&stops=${list_stations}&status=${state}`,
         {

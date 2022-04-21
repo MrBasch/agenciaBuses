@@ -43,7 +43,6 @@ export default {
   methods: {
     async updateStation(name, code, new_code, city_name) {
       const city = this.cities.filter((city) => city.name === city_name);
-      console.log("city = ", city);
       await fetch(
         `http://127.0.0.1:8000/back/station?code=${code}&name=${name}&new_code=${new_code}&city_code=${city[0].code}`,
         {

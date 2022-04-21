@@ -183,8 +183,11 @@ def get_route_by_code(code):
 
 
 def get_or_create_route(name, code, station_list, status):
+    if type(station_list) != str:
+        stations = get_stations_by_list_code(station_list)
     station_list = station_list.split(",")
     stations = get_stations_by_list_name(station_list)
+
     if status not in ROUTE_STATUSES or not code or not name or not stations:
         raise ValidationError("Invalid data")
 
@@ -429,9 +432,9 @@ def update_or_create_place(code, available, code_travel, new_code):
     if not new_code:
         new_code = code
 
-    place, created = Place.objects.get_or_create(
+    place, created = Place.objects.update_or_create(
         code=code,
-        defaults={"travel": travel, "available": available, "new_code": new_code},
+        defaults={"travel": travel, "available": available, "code": new_code},
     )
     if created:
         place.save()
@@ -470,7 +473,7 @@ def update_or_create_passenger(place_code, name, rut, new_rut):
         raise ValidationError("Invalid data")
     if not new_rut:
         new_rut = rut
-    passenger, created = Passenger.objects.get_or_create(
+    passenger, created = Passenger.objects.update_or_create(
         rut=rut, defaults={"name": name, "place": place, "rut": new_rut}
     )
     if created:

@@ -27,7 +27,7 @@
             )
           "
           color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -48,16 +48,6 @@ export default {
   },
   methods: {
     async updateDriver(name, rut, new_rut, status) {
-      console.log(
-        "status",
-        status,
-        "name",
-        name,
-        "rut",
-        rut,
-        "new_rut",
-        new_rut
-      );
       await fetch(
         `http://127.0.0.1:8000/back/driver?status=${status}&name=${name}&rut=${rut}&new_rut=${new_rut}`,
         {

@@ -81,7 +81,6 @@ export default {
       const selected_driver = this.drivers.filter(
         (driver) => driver.rut === rut_driver
       );
-      console.log("driver", selected_driver);
       await fetch(
         `http://127.0.0.1:8000/back/travel?code=${code}&route=${code_route}&start_time=${start_time}&end_time=${end_time}&driver=${selected_driver[0].rut}&bus=${code_bus}`,
         {

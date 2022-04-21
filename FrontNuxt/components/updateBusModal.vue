@@ -21,7 +21,7 @@
             updateBus((code = code), (status = state), (new_code = new_code))
           "
           color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>

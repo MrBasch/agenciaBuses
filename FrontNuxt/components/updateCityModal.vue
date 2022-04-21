@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="500px" v-model="edit">
     <v-card class="addDialog">
-      <v-card-title class="cardTitle">Update or create City</v-card-title>
+      <v-card-title class="cardTitle">Update or create city</v-card-title>
       <v-form>
         <v-text-field v-model="name" label="Enter city name"></v-text-field>
         <v-text-field v-model="code" label="Enter city code"></v-text-field>
@@ -13,7 +13,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click.stop="updateCity(name, code, new_code)" color="#417D7A"
-          >Add</v-btn
+          >Update</v-btn
         >
       </v-card-actions>
     </v-card>

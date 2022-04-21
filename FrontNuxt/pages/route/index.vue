@@ -2,9 +2,14 @@
   <div>
     <div class="header_">
       <h1>Routes</h1>
-      <button class="add" @click="open = !open">
-        <v-icon>mdi-plus</v-icon>
-      </button>
+      <div class="buttons_header">
+        <button class="add" @click="open = !open">
+          <v-icon>mdi-plus</v-icon>
+        </button>
+        <buttton class="update" @click="edit = !edit">
+          <v-icon>mdi-pencil</v-icon>
+        </buttton>
+      </div>
     </div>
     <ul>
       <li v-for="(route, index) in routes" :key="route.code">
@@ -19,9 +24,6 @@
             </div>
           </div>
           <div class="buttons">
-            <buttton class="update" @click="edit = !edit"
-              ><v-icon>mdi-pencil</v-icon></buttton
-            >
             <button
               class="delete"
               @click="deleteRoute((index = index), (code = route.code))"

@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     async logIn(username, password) {
-      console.log("pass = ", password, "user =", username);
       await fetch("http://127.0.0.1:8000/api-token-auth/", {
         method: "POST",
         mode: "cors",
