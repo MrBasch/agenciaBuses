@@ -46,8 +46,13 @@ export default {
         body: JSON.stringify({ username: username, password: password }),
       }).then((res) =>
         res.json().then((data) => {
-          console.log("data =", data);
-          this.$auth.strategy.token.set((key = "Token"), (value = data));
+          console.log("data =", data.token);
+          localStorage.token = data.token;
+          this.$localForage.setItem("token", data.token);
+          console.log(
+            "token desde local = ",
+            this.$localForage.getItem("token")
+          );
         })
       );
     },

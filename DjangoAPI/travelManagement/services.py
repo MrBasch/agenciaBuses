@@ -167,7 +167,10 @@ def get_stations_by_list_name(station_list):
 
 
 def get_all_routes():
-    return Route.objects.annotate(places=Count("travel__place__available"))
+    return Route.objects.all()
+
+
+# filter(travel__place__available=True).annotate(places=Count("travel__place__available")
 
 
 def delete_route(route):
@@ -183,10 +186,13 @@ def get_route_by_code(code):
 
 
 def get_or_create_route(name, code, station_list, status):
-    if type(station_list) != str:
+    print("station_list = ", station_list, "type=", type(station_list))
+    if type(station_list) == str:
+        station_list = station_list.split(",")
+        print("stations :", station_list)
+        stations = get_stations_by_list_name(station_list)
+    else:
         stations = get_stations_by_list_code(station_list)
-    station_list = station_list.split(",")
-    stations = get_stations_by_list_name(station_list)
 
     if status not in ROUTE_STATUSES or not code or not name or not stations:
         raise ValidationError("Invalid data")

@@ -14,11 +14,6 @@
         <nuxt-link to="/place">Place</nuxt-link>
       </div>
       <v-spacer />
-      <div class="nav-buttons">
-        <v-btn type="submit" border-color="black" class="mt-4" color="#417D7A"
-          ><v-icon>mdi-logout</v-icon></v-btn
-        >
-      </div>
     </div>
   </nav>
 </template>

@@ -2,6 +2,7 @@ from dataclasses import fields
 from unittest.util import _MAX_LENGTH
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+from django.db.models import Count
 
 from travelManagement.models import (
     Bus,
@@ -54,6 +55,28 @@ class RouteSerializer(serializers.Serializer):
     stops = StationSerializer(many=True)
     name = serializers.CharField(max_length=100)
     status = serializers.CharField(max_length=50)
+
+
+class RouteWithPlaceSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=50)
+    stops = StationSerializer(many=True)
+    name = serializers.CharField(max_length=100)
+    status = serializers.CharField(max_length=50)
+    places = serializers.SerializerMethodField()
+
+    def get_places(self, instance):
+        travels = (
+            instance.travel_set.all()
+            .filter(place__available=False)
+            .annotate(places=Count("place__available"))
+        )
+        places = 0
+        for travel in travels:
+            places += travel.places
+        try:
+            return places / len(travels)
+        except ZeroDivisionError:
+            return 0
 
 
 class BusSerializer(serializers.Serializer):

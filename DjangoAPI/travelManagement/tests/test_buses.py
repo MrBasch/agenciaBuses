@@ -22,7 +22,6 @@ class TestCities:
         ]
         response = api_client.get(
             self.url,
-            headers={"Authorization": "Token 766c1cfc137888181d2c6f8b0e14a7dd2dc1f8ea"},
             format="json",
         )
         assert json.loads(response.content) == expected

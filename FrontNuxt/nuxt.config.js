@@ -34,10 +34,14 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/localforage'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
+  ssr: true,
+  target: 'server',
   modules: [
+    ['cookie-universal-nuxt', { alias: 'cookiz' }],
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

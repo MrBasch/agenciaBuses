@@ -47,7 +47,7 @@ export default {
           method: "PUT",
           mode: "cors",
           headers: {
-            Authorization: `Token 766c1cfc137888181d2c6f8b0e14a7dd2dc1f8ea`,
+            Authorization: `Token ${localStorage.token}`,
           },
         }
       ).then((res) => res.json().then((data) => console.log(data)));

@@ -304,7 +304,7 @@ class StationAPI(APIView):
 class RouteAPI(APIView):
     def get(self, request):
         route = services.get_all_routes()
-        serializer = serializers.RouteSerializer(route, many=True)
+        serializer = serializers.RouteWithPlaceSerializer(route, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
