@@ -8,7 +8,7 @@ Configurar PIP (python) y NPM (nodejs)
 https://tecnonucleous.com/2018/01/28/como-instalar-pip-para-python-en-windows-mac-y-linux/
 https://codingpotions.com/npm-tutorial
 
-Paso 1: Clonar el proyecto de github
+Clonar el proyecto de github
 Dirigase a la carpeta donde desee instalar la aplicacion y clone con el comando 
 git clone https://github.com/MrBasch/agenciaBuses.git
 
