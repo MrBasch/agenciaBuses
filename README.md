@@ -34,6 +34,7 @@ Desde DjangoAPI
 > _python manage.py runserver_
 
 Desde FrontNuxt
+<img width="716" alt="image" src="https://github.com/MrBasch/agenciaBuses/assets/71535280/dd9dad1f-9def-42c6-b5ab-76d9155b2078">
 
 Iniciar el servidor NUXT
 
